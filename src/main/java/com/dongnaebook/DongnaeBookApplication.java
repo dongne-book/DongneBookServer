@@ -1,4 +1,4 @@
-package com.esgworks.dongnaebook;
+package com.dongnaebook;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
