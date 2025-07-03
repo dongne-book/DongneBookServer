@@ -1,4 +1,4 @@
-package com.esgworks.dongnaebook;
+package com.dongnaebook;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
