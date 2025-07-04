@@ -1,5 +1,7 @@
 package com.dongnaebook.domain.user;
 
+import com.dongnaebook.domain.user.DTO.UserLoginRequestDto;
+import com.dongnaebook.domain.user.DTO.UserLoginResponseDto;
 import com.dongnaebook.domain.user.DTO.UserRequestDto;
 import com.dongnaebook.domain.user.DTO.UserResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +21,11 @@ public class UserController {
     public ResponseEntity<UserResponseDto> signup(@RequestBody UserRequestDto request) {
         UserResponseDto userResponseDto = userService.signup(request);
         return ResponseEntity.ok(userResponseDto);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
+        UserLoginResponseDto userLoginResponseDto = userService.login(userLoginRequestDto);
+        return ResponseEntity.ok(userLoginResponseDto);
     }
 }
