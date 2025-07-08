@@ -4,6 +4,8 @@ import com.dongnaebook.domain.user.DTO.UserLoginRequestDto;
 import com.dongnaebook.domain.user.DTO.UserLoginResponseDto;
 import com.dongnaebook.domain.user.DTO.UserRequestDto;
 import com.dongnaebook.domain.user.DTO.UserResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,5 +29,10 @@ public class UserController {
     public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
         UserLoginResponseDto userLoginResponseDto = userService.login(userLoginRequestDto);
         return ResponseEntity.ok(userLoginResponseDto);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok("로그아웃 하셨습니다.");
     }
 }
