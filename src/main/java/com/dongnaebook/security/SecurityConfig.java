@@ -22,7 +22,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/signup", "/api/users/login").permitAll() // 회원가입, 로그인은 인증 없이해야함
+                        .requestMatchers("/api/users/signup", "/api/users/login","/oauth/kakao/callback").permitAll() // 회원가입, 로그인은 인증 없이해야함
                         .anyRequest().authenticated()
                 )
          .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
