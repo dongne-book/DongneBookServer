@@ -3,6 +3,7 @@ package com.dongnaebook.domain.social;
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserRepository;
 import com.dongnaebook.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,13 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 @Service
+@RequiredArgsConstructor
 public class KakaoAuthService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    UserRepository userRepository;
-    JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;;
     @Value("${kakao.client-id}")
     private String kakaoClientId;
 
@@ -32,6 +34,7 @@ public class KakaoAuthService {
         params.add("client_id", kakaoClientId);
         params.add("redirect_uri", kakaoRedirectUrl);
         params.add("code", code);
+
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -48,39 +51,39 @@ public class KakaoAuthService {
         userHeaders.add("Authorization", "Bearer " + accessToken);
         HttpEntity<Void> userRequest = new HttpEntity<>(userHeaders);
 
-//        ResponseEntity<Map> userInfoResponse = restTemplate.postForEntity(userInfoUrl, userRequest, Map.class);
         ResponseEntity<Map> userInfoResponse = restTemplate.exchange(userInfoUrl, HttpMethod.GET, userRequest, Map.class);
         Map userInfo = userInfoResponse.getBody();
         System.out.println("카카오 userInfo: " + userInfo);
 
-//        String kakaoEmail = (String) userInfo.get("email");
-//        if(kakaoEmail == null) {
-//            throw new RuntimeException("카카오에서 이메일 정보를 확인할 수 없습니다.");
-//        }
         Map kakaoAccount = (Map) userInfo.get("kakao_account");
         String kakaoEmail = kakaoAccount != null ? (String) kakaoAccount.get("email") : null;
         if(kakaoEmail == null){
             throw new RuntimeException("kakao account is null");
         }
-
-        User user = userRepository.findByEmail(kakaoEmail)
-                .orElseGet(()-> {
-                    User newUser = new User();
-                    newUser.setEmail(kakaoEmail);
-                    newUser.setNickname(kakaoEmail);
-                    return userRepository.save(newUser);
+        KakaoUserInfo kakaoUserInfo = new KakaoUserInfo(userInfo);
+        if(kakaoUserInfo.getEmail() == null){
+            throw new RuntimeException("카카오 계정 이메일이 없습니다.");
+        }
+        User user = userRepository.findByEmail(kakaoUserInfo.getEmail())
+                .orElseGet(() -> {
+                    return userRepository.save(
+                            User.builder()
+                                    .email(kakaoUserInfo.getEmail())
+                                    .nickname(kakaoUserInfo.getNickname() != null ? kakaoUserInfo.getNickname() : kakaoUserInfo.getEmail())
+                                    .kakaoId(kakaoUserInfo.getKakaoId())
+                                    .password(null)
+                                    .build()
+                    );
                 });
 
-        String jwt = jwtTokenProvider.generateToken(kakaoEmail);
-//        String kakaoId = (String) userInfo.get("id");
-//        User user = userRepository.findByKakaoId(kakaoId)
-//                .orElseGet(()-> {
-//                    User newUser = new User();
-//                    newUser.setEmail(kakaoId);
-//                    return userRepository.save(newUser);
-//                });
-//
-//        String jwt = jwtTokenProvider.generateToken(kakaoId);
-        return jwt;
+        String jwt = jwtTokenProvider.generateToken(user.getEmail());
+        return Map.of(
+                "token", jwt,
+                "user", Map.of(
+                        "id", user.getId(),
+                        "email", user.getEmail(),
+                        "nickname", user.getNickname()
+                )
+        );
     }
 }

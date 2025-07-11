@@ -23,8 +23,10 @@ public class JwtTokenProvider {
         try{
             SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            System.out.println("[validateToken] 토큰 검증 성공! token: " + token);
             return true;
         } catch (JwtException | IllegalArgumentException e){
+            System.err.println("[validateToken] 토큰 검증 실패! token: " + token + " / reason: " + e.getMessage());
             return false;
         }
     }
@@ -33,6 +35,10 @@ public class JwtTokenProvider {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         String email = claims.getSubject();
+
+
+        System.out.println("[getAuthentication] email: " + email);
+        System.out.println("[getAuthentication] claims: " + claims);
 
         User principal = new User(email, "", Collections.emptyList());
         return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
@@ -43,12 +49,15 @@ public class JwtTokenProvider {
         long exp = 1000 * 60 * 60 * 24;
 
         SecretKey Key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
-
-        return Jwts.builder()
+        System.out.println("[generateToken] 발급 email: " + email);
+        String token = Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now+exp))
                 .signWith(Key, SignatureAlgorithm.HS256)
                 .compact();
+        System.out.println("[generateToken] 발급된 토큰: " + token);
+
+        return token;
     }
 }

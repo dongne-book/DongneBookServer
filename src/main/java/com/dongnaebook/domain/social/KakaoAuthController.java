@@ -14,6 +14,7 @@ public class KakaoAuthController {
 
     @GetMapping("/callback")
     public ResponseEntity<?> kakaoCallback(@RequestParam String code) {
+
         return ResponseEntity.ok(kakaoAuthService.kakaoLogin(code));
     }
 }
