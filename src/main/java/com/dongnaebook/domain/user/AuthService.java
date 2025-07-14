@@ -1,9 +1,9 @@
 package com.dongnaebook.domain.user;
 
-import com.dongnaebook.domain.user.DTO.UserLoginRequestDto;
-import com.dongnaebook.domain.user.DTO.UserLoginResponseDto;
-import com.dongnaebook.domain.user.DTO.UserRequestDto;
-import com.dongnaebook.domain.user.DTO.UserResponseDto;
+import com.dongnaebook.domain.user.DTO.UserLoginRequestDTO;
+import com.dongnaebook.domain.user.DTO.UserLoginResponseDTO;
+import com.dongnaebook.domain.user.DTO.UserRequestDTO;
+import com.dongnaebook.domain.user.DTO.UserResponseDTO;
 import com.dongnaebook.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +17,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public UserResponseDto signup(UserRequestDto userRequestDto){
+    public UserResponseDTO signup(UserRequestDTO userRequestDto){
         if(userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new DuplicateUserException("이미 존재하는 이메일입니다.");
         }
@@ -27,14 +27,14 @@ public class AuthService {
                 .password(passwordEncoder.encode(userRequestDto.getPassword()))
                 .build();
         User saved = userRepository.save(user);
-        return UserResponseDto.builder()
+        return UserResponseDTO.builder()
                 .id(saved.getId())
                 .email(saved.getEmail())
                 .nickname(saved.getNickname())
                 .build();
     }
 
-    public UserLoginResponseDto login(UserLoginRequestDto userLoginRequestDto){
+    public UserLoginResponseDTO login(UserLoginRequestDTO userLoginRequestDto){
         User user = userRepository.findByEmail(userLoginRequestDto.getEmail())
                 .orElseThrow(()->new RuntimeException("존재하지 않는 이메일입니다."));
 
@@ -45,7 +45,7 @@ public class AuthService {
 
         String token = jwtTokenProvider.generateToken(user.getEmail());
 
-        return UserLoginResponseDto.builder()
+        return UserLoginResponseDTO.builder()
                 .token(token)
                 .email(user.getEmail())
                 .nickname(user.getNickname())
