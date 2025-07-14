@@ -1,54 +1,43 @@
 package com.dongnaebook.domain.user;
 
-import com.dongnaebook.domain.user.DTO.UserLoginRequestDto;
-import com.dongnaebook.domain.user.DTO.UserLoginResponseDto;
-import com.dongnaebook.domain.user.DTO.UserRequestDto;
-import com.dongnaebook.domain.user.DTO.UserResponseDto;
-import com.dongnaebook.security.JwtTokenProvider;
+import com.dongnaebook.common.exception.NotFoundException;
+import com.dongnaebook.domain.album.Album;
+import com.dongnaebook.domain.album.AlbumMapper;
+import com.dongnaebook.domain.album.AlbumRepository;
+import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
+import com.dongnaebook.domain.album.DTO.AlbumResponseDTO;
+import com.dongnaebook.domain.user.DTO.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.dongnaebook.common.exception.DuplicateUserException;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserResponseDto signup(UserRequestDto userRequestDto){
-        if(userRepository.existsByEmail(userRequestDto.getEmail())) {
-            throw new DuplicateUserException("이미 존재하는 이메일입니다.");
-        }
-        User  user = User.builder()
-                .email(userRequestDto.getEmail())
-                .nickname(userRequestDto.getNickname())
-                .password(passwordEncoder.encode(userRequestDto.getPassword()))
-                .build();
-        User saved = userRepository.save(user);
-        return UserResponseDto.builder()
-                .id(saved.getId())
-                .email(saved.getEmail())
-                .nickname(saved.getNickname())
-                .build();
+    @Transactional(readOnly = true)
+    public UserResponseDTO getById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        return UserMapper.toResponseDto(user);
     }
 
-    public UserLoginResponseDto login(UserLoginRequestDto userLoginRequestDto){
-        User user = userRepository.findByEmail(userLoginRequestDto.getEmail())
-                .orElseThrow(()->new RuntimeException("존재하지 않는 이메일입니다."));
+    @Transactional(readOnly = true)
+    public List<UserResponseDTO> getAll() {
+        return userRepository.findAll().stream()
+                .map(UserMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
 
-        if(!passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-        }
-        //기능만 확인하고 이메일하고 비밀번호 둘 다 안내메시지 같은걸로 묶기
+    public UserResponseDTO getByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
-        String token = jwtTokenProvider.generateToken(user.getEmail());
-
-        return UserLoginResponseDto.builder()
-                .token(token)
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .build();
+        return UserMapper.toResponseDto(userRepository.save(user));
     }
 }

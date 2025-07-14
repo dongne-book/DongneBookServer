@@ -17,7 +17,7 @@ public class AlbumService {
     private final AlbumRepository albumRepository;
 
     public AlbumResponseDTO create(AlbumRequestDTO requestDto) {
-        Album album = AlbumMapper.toAlbum(requestDto);
+        Album album = AlbumMapper.toEntity(requestDto);
 
         Album savedAlbum = albumRepository.save(album);
 
@@ -46,7 +46,7 @@ public class AlbumService {
         return AlbumMapper.toResponseDto(albumRepository.save(album));
     }
 
-    public void deleteAlbum(Long id) {
+    public void deleteById(Long id) {
         Album album = albumRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Album not found"));
         albumRepository.delete(album);
