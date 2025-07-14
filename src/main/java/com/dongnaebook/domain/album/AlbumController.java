@@ -3,9 +3,6 @@ package com.dongnaebook.domain.album;
 
 import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
 import com.dongnaebook.domain.album.DTO.AlbumResponseDTO;
-import com.dongnaebook.domain.user.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +36,7 @@ public class AlbumController {
 
     @DeleteMapping("{id}")
     public void deleteAlbum(@PathVariable Long id) {
-        albumService.deleteAlbum(id);
+        albumService.deleteById(id);
     }
 
 }

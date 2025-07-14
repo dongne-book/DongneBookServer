@@ -1,10 +1,10 @@
 package com.dongnaebook.domain.user;
 
-import com.dongnaebook.domain.user.DTO.UserRequestDto;
-import com.dongnaebook.domain.user.DTO.UserResponseDto;
+import com.dongnaebook.domain.user.DTO.UserRequestDTO;
+import com.dongnaebook.domain.user.DTO.UserResponseDTO;
 
 public class UserMapper {
-    public static User toEntity(UserRequestDto userRequestDto, String encodedPassword) {
+    public static User toEntity(UserRequestDTO userRequestDto, String encodedPassword) {
         return User.builder()
                 .email(userRequestDto.getEmail())
                 .nickname(userRequestDto.getNickname())
@@ -12,8 +12,8 @@ public class UserMapper {
                 .build();
     }
 
-   public static UserResponseDto toResponseDto(User user) {
-        return UserResponseDto.builder()
+   public static UserResponseDTO toResponseDto(User user) {
+        return UserResponseDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
