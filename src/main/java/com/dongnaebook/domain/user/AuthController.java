@@ -1,9 +1,9 @@
 package com.dongnaebook.domain.user;
 
-import com.dongnaebook.domain.user.DTO.UserLoginRequestDto;
-import com.dongnaebook.domain.user.DTO.UserLoginResponseDto;
-import com.dongnaebook.domain.user.DTO.UserRequestDto;
-import com.dongnaebook.domain.user.DTO.UserResponseDto;
+import com.dongnaebook.domain.user.DTO.UserLoginRequestDTO;
+import com.dongnaebook.domain.user.DTO.UserLoginResponseDTO;
+import com.dongnaebook.domain.user.DTO.UserRequestDTO;
+import com.dongnaebook.domain.user.DTO.UserResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody UserRequestDto request) {
-        UserResponseDto userResponseDto = authService.signup(request);
+    public ResponseEntity<UserResponseDTO> signup(@RequestBody UserRequestDTO request) {
+        UserResponseDTO userResponseDto = authService.signup(request);
         return ResponseEntity.ok(userResponseDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
-        UserLoginResponseDto userLoginResponseDto = authService.login(userLoginRequestDto);
+    public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserLoginRequestDTO userLoginRequestDto) {
+        UserLoginResponseDTO userLoginResponseDto = authService.login(userLoginRequestDto);
         return ResponseEntity.ok(userLoginResponseDto);
     }
 

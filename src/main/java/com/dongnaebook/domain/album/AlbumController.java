@@ -36,7 +36,7 @@ public class AlbumController {
 
     @DeleteMapping("{id}")
     public void deleteAlbum(@PathVariable Long id) {
-        albumService.deleteAlbum(id);
+        albumService.deleteById(id);
     }
 
 }

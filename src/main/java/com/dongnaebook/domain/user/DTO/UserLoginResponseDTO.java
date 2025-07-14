@@ -1,12 +1,14 @@
 package com.dongnaebook.domain.user.DTO;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserRequestDto {
+@Builder
+public class UserLoginResponseDTO {
+    private String token;
     private String email;
     private String nickname;
-    private String password;
 }

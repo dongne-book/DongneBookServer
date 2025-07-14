@@ -17,7 +17,7 @@ public class AlbumMapper {
                .build();
    }
 
-   public static Album toAlbum(AlbumRequestDTO albumRequestDto) {
+   public static Album toEntity(AlbumRequestDTO albumRequestDto) {
          return Album.builder()
                  .name(albumRequestDto.getName())
                  .startDate(albumRequestDto.getStartDate())
