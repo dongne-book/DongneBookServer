@@ -14,20 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class UserController {
-    private final UserService userService;
+public class AuthController {
+    private final AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signup(@RequestBody UserRequestDto request) {
-        UserResponseDto userResponseDto = userService.signup(request);
+        UserResponseDto userResponseDto = authService.signup(request);
         return ResponseEntity.ok(userResponseDto);
     }
 
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto userLoginRequestDto) {
-        UserLoginResponseDto userLoginResponseDto = userService.login(userLoginRequestDto);
+        UserLoginResponseDto userLoginResponseDto = authService.login(userLoginRequestDto);
         return ResponseEntity.ok(userLoginResponseDto);
     }
 
