@@ -15,6 +15,10 @@ public class PostMapper {
                .imageUrl(post.getImageUrl())
                .isPublic(post.getIsPublic())
                .place(PlaceMapper.toResponseDTO(post.getPlace()))
+               .createdAt(post.getCreatedAt())
+               .createdBy(post.getCreatedBy())
+               .modifiedAt(post.getModifiedAt())
+               .modifiedBy(post.getModifiedBy())
                .build();
    }
 
