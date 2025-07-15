@@ -15,11 +15,12 @@ import java.time.LocalDate;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostResponseDTO extends BaseDTO {
+public class PostDetailDTO extends BaseDTO {
     private Long id;
     private String content;
     private LocalDate visitDate;
     private String imageUrl;
     private Boolean isPublic;
     private PlaceResponseDTO place;
+
 }
