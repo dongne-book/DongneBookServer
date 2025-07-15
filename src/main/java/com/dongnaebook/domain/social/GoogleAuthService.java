@@ -50,25 +50,15 @@ public class GoogleAuthService {
         //Response Token
         ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, request, Map.class);
         String accessToken = (String) response.getBody().get("access_token");
-        System.out.println("구글 accessToken: " + accessToken);
 
         //Response User Info
         String userInfoUrl ="https://www.googleapis.com/oauth2/v2/userinfo";
-        System.out.println("구글 userInfoUrl: " + userInfoUrl);
         HttpHeaders userHeaders = new HttpHeaders();
         userHeaders.add("Authorization", "Bearer " + accessToken);
         HttpEntity<Void> userRequest = new HttpEntity<>(userHeaders);
         ResponseEntity<Map> userInfoResponse = restTemplate.exchange(userInfoUrl, HttpMethod.GET, userRequest, Map.class);
         Map<String, Object> userInfo = userInfoResponse.getBody();
-//        Map userInfo = userInfoResponse.getBody();
-        System.out.println("구글 userInfo: " + userInfo);
 
-//        Map googleAccount = (Map) userInfo.get("google_account");
-//        String googleEmail = googleAccount != null ? (String) googleAccount.get("email") : null;
-//        String googleEmail = (String) userInfo.get("email");
-//        if(googleEmail == null){
-//            throw new RuntimeException("google account is null");
-//        }
         GoogleUserInfo googleUserInfo = new GoogleUserInfo(userInfo);
         if(googleUserInfo.getEmail() == null){
             throw new RuntimeException("구글 계정 이메일이 없습니다.");

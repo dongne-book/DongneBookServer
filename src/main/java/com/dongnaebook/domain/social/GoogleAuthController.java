@@ -13,7 +13,6 @@ public class GoogleAuthController {
     }
     @GetMapping("/callback")
     public ResponseEntity<?> googleCallback(@RequestParam String code) {
-        System.out.println("✅ Google Callback 도달, code:" + code);
         return ResponseEntity.ok(googleAuthService.googleLogin(code));
     }
 }

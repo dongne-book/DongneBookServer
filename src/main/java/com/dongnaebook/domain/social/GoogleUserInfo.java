@@ -14,22 +14,4 @@ public class GoogleUserInfo {
         this.email = (String) userInfo.get("email");
         this.nickname = (String) userInfo.get("name");
     }
-
-//    public GoogleUserInfo(Map userInfo) {
-//        // googleId
-//        this.googleId = String.valueOf(userInfo.get("id"));
-//
-//        // email, nickname
-//        String email = null, nickname = null;
-//        Map googleAccount = (Map) userInfo.get("google_account");
-//        if (googleAccount != null) {
-//            email = (String) googleAccount.get("email");
-//            Map profile = (Map) googleAccount.get("profile");
-//            if (profile != null) {
-//                nickname = (String) profile.get("nickname");
-//            }
-//        }
-//        this.email = email;
-//        this.nickname = nickname;
-//    }
 }
