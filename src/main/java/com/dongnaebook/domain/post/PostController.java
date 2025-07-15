@@ -1,6 +1,7 @@
 package com.dongnaebook.domain.post;
 
 
+import com.dongnaebook.domain.post.DTO.PostDetailDTO;
 import com.dongnaebook.domain.post.PostService;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
@@ -38,6 +39,11 @@ public class PostController {
     @DeleteMapping("{id}")
     public void deletePost(@PathVariable Long id) {
         postService.deleteById(id);
+    }
+
+    @GetMapping("/albums/{albumId}")
+    public List<PostDetailDTO> getPostsByAlbumId(@PathVariable Long albumId) {
+        return postService.getPostsByAlbumId(albumId);
     }
 
 }
