@@ -1,0 +1,13 @@
+# pack-refs with: peeled fully-peeled sorted 
+b97345e18825d18fa3425363b5b349967992cab3 refs/heads/feat/album
+28c5e9e640af3101922c624b57bdd93119e75e1a refs/heads/feat/post
+46fba512ecd4f6064f295a3c32b9e93a28c0ca9a refs/heads/main
+c11691e223bf9b1ef6bc141df2059a9206e08718 refs/heads/new_social_login_branch
+daf0c29d6d66bc79ebee7f1b40bdef54bb9d0f9d refs/heads/sj_social_login
+c11691e223bf9b1ef6bc141df2059a9206e08718 refs/heads/test_branch
+29e2c3381d72928cab43378356123997fafe632e refs/pull/2/head
+111ab1727066599a23095391b0771cff7e130894 refs/pull/3/head
+9492a8b87292ea5a70a53b7440800d7cfde13cef refs/pull/4/head
+09296ec21e9a6b057743d0f04403ea696ea1b0c7 refs/pull/6/head
+b97345e18825d18fa3425363b5b349967992cab3 refs/pull/7/head
+28c5e9e640af3101922c624b57bdd93119e75e1a refs/pull/8/head
