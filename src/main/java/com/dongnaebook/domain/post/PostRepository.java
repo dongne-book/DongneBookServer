@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByAlbum_Id(Long albumId);
+
+    List<Post> findByPlace_Id(Long placeId);
 }

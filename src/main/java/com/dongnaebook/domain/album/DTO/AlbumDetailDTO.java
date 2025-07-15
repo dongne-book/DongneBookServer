@@ -1,7 +1,7 @@
 package com.dongnaebook.domain.album.DTO;
 
 import com.dongnaebook.common.domain.DTO.BaseDTO;
-import com.dongnaebook.domain.post.DTO.PostDetailDTO;
+import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +21,6 @@ public class AlbumDetailDTO extends BaseDTO {
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<PostDetailDTO> posts;
+    private List<PostResponseDTO> posts;
 
 }

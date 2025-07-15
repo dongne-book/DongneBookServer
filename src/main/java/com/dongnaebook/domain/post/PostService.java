@@ -5,10 +5,6 @@ import com.dongnaebook.domain.album.Album;
 import com.dongnaebook.domain.album.AlbumRepository;
 import com.dongnaebook.domain.place.Place;
 import com.dongnaebook.domain.place.PlaceRepository;
-import com.dongnaebook.domain.post.DTO.PostDetailDTO;
-import com.dongnaebook.domain.post.Post;
-import com.dongnaebook.domain.post.PostMapper;
-import com.dongnaebook.domain.post.PostRepository;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -73,10 +69,17 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public List<PostDetailDTO> getPostsByAlbumId(Long albumId) {
+    public List<PostResponseDTO> getPostsByAlbumId(Long albumId) {
         List<Post> posts = postRepository.findByAlbum_Id(albumId);
         return posts.stream()
-                .map(PostMapper::toDetailDTO)
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostResponseDTO> getPostsByPlaceId(Long placeId) {
+        List<Post> posts = postRepository.findByPlace_Id(placeId);
+        return posts.stream()
+                .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
 }
