@@ -1,5 +1,6 @@
 package com.dongnaebook.domain.post;
 
+import com.dongnaebook.domain.album.Album;
 import com.dongnaebook.domain.place.Place;
 import com.dongnaebook.domain.place.PlaceMapper;
 import com.dongnaebook.domain.post.Post;
@@ -22,13 +23,14 @@ public class PostMapper {
                .build();
    }
 
-   public static Post toEntity(PostRequestDTO postRequestDTO, Place place) {
+   public static Post toEntity(PostRequestDTO postRequestDTO, Place place, Album album) {
          return Post.builder()
                  .content(postRequestDTO.getContent())
                  .visitDate(postRequestDTO.getVisitDate())
                  .imageUrl(postRequestDTO.getImageUrl())
                  .isPublic(postRequestDTO.getIsPublic())
                  .place(place)
+                 .album(album)
                  .build();
    }
 }

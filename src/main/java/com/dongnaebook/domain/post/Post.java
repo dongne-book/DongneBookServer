@@ -1,6 +1,7 @@
 package com.dongnaebook.domain.post;
 
 import com.dongnaebook.common.domain.BaseEntity;
+import com.dongnaebook.domain.album.Album;
 import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
 import com.dongnaebook.domain.place.Place;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
@@ -31,6 +32,10 @@ public class Post extends BaseEntity {
     private Boolean isPublic;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_id", nullable = false)
+    private Album album;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     private Place place;
 
@@ -43,6 +48,10 @@ public class Post extends BaseEntity {
 
     public void updatePlace(Place place) {
         this.place = place;
+    }
+
+    public void updateAlbum(Album album) {
+        this.album = album;
     }
 
 }

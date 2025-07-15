@@ -1,4 +1,6 @@
 package com.dongnaebook.domain.place;
+import com.dongnaebook.domain.album.Album;
+import com.dongnaebook.domain.region.Region;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,5 +27,9 @@ public class Place {
 
     @Column(nullable = false, columnDefinition = "geometry(Point,4326)")
     private Point location; // 위도, 경도 포함
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_code", referencedColumnName = "code")
+    private Region region;
 
 }

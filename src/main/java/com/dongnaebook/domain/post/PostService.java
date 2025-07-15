@@ -1,6 +1,8 @@
 package com.dongnaebook.domain.post;
 
 import com.dongnaebook.common.exception.NotFoundException;
+import com.dongnaebook.domain.album.Album;
+import com.dongnaebook.domain.album.AlbumRepository;
 import com.dongnaebook.domain.place.Place;
 import com.dongnaebook.domain.place.PlaceRepository;
 import com.dongnaebook.domain.post.Post;
@@ -20,11 +22,15 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final PlaceRepository placeRepository;
+    private final AlbumRepository albumRepository;
 
     public PostResponseDTO create(PostRequestDTO requestDto) {
         Place place = placeRepository.findById(requestDto.getPlaceId())
                 .orElseThrow(() -> new NotFoundException("Place not found"));
-        Post post = PostMapper.toEntity(requestDto, place);
+        Album album = albumRepository.findById(requestDto.getAlbumId())
+                .orElseThrow(() -> new NotFoundException("Album not found"));
+
+        Post post = PostMapper.toEntity(requestDto, place, album);
 
         Post savedPost = postRepository.save(post);
 
@@ -52,8 +58,11 @@ public class PostService {
 
         Place place = placeRepository.findById(updateRequestDto.getPlaceId())
                 .orElseThrow(() -> new NotFoundException("Place not found"));
+        Album album = albumRepository.findById(updateRequestDto.getAlbumId())
+                .orElseThrow(() -> new NotFoundException("Album not found"));
 
         post.updatePlace(place);
+        post.updateAlbum(album);
         return PostMapper.toResponseDto(postRepository.save(post));
     }
 
