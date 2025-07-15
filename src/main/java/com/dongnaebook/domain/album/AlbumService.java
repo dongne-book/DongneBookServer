@@ -1,9 +1,12 @@
 package com.dongnaebook.domain.album;
 
 import com.dongnaebook.common.exception.NotFoundException;
+import com.dongnaebook.domain.album.DTO.AlbumDetailDTO;
 import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
 import com.dongnaebook.domain.album.DTO.AlbumResponseDTO;
 
+import com.dongnaebook.domain.post.DTO.PostResponseDTO;
+import com.dongnaebook.domain.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AlbumService {
     private final AlbumRepository albumRepository;
+    private final PostService postService;
 
     public AlbumResponseDTO create(AlbumRequestDTO requestDto) {
         Album album = AlbumMapper.toEntity(requestDto);
@@ -25,9 +29,10 @@ public class AlbumService {
     }
 
     @Transactional(readOnly = true)
-    public AlbumResponseDTO getById(Long id) {
+    public AlbumDetailDTO getById(Long id) {
         Album album = albumRepository.findById(id).orElseThrow(() -> new NotFoundException("Album not found"));
-        return AlbumMapper.toResponseDto(album);
+        List<PostResponseDTO> posts = postService.getPostsByAlbumId(id);
+        return AlbumMapper.toDetailDTO(album, posts);
     }
 
     @Transactional(readOnly = true)
