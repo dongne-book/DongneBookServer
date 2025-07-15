@@ -21,35 +21,35 @@ public class RegionInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        File file = new File("src/main/resources/regions-utf8.txt"); // 경로는 필요에 따라 조정
-
-        List<Region> regions = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\t");
-
-                String code = parts[0];
-                String name = parts[1];
-                String status = parts[2];
-
-                System.out.println("Processing region: " + code + " - " + name + " - " + status);
-
-
-                if (!"존재".equals(status)) continue; // 폐지된 동 제외
-
-                Region region = Region.builder()
-                        .code(code)
-                        .name(name)
-                        .build();
-
-                regions.add(region);
-            }
-        }
-
-        regionRepository.deleteAllInBatch();
-        regionRepository.saveAll(regions);
+//        File file = new File("src/main/resources/regions-utf8.txt"); // 경로는 필요에 따라 조정
+//
+//        List<Region> regions = new ArrayList<>();
+//
+//        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+//            String line;
+//
+//            while ((line = br.readLine()) != null) {
+//                String[] parts = line.split("\t");
+//
+//                String code = parts[0];
+//                String name = parts[1];
+//                String status = parts[2];
+//
+//                System.out.println("Processing region: " + code + " - " + name + " - " + status);
+//
+//
+//                if (!"존재".equals(status)) continue; // 폐지된 동 제외
+//
+//                Region region = Region.builder()
+//                        .code(code)
+//                        .name(name)
+//                        .build();
+//
+//                regions.add(region);
+//            }
+//        }
+//
+//        regionRepository.deleteAllInBatch();
+//        regionRepository.saveAll(regions);
     }
 }

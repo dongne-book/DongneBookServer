@@ -13,4 +13,5 @@ public class PostRequestDTO {
     private String imageUrl;
     private Boolean isPublic;
     private Long placeId;
+    private Long albumId;
 }

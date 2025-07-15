@@ -3,6 +3,8 @@ package com.dongnaebook.domain.place;
 import com.dongnaebook.common.exception.NotFoundException;
 import com.dongnaebook.domain.place.DTO.PlaceRequestDTO;
 import com.dongnaebook.domain.place.DTO.PlaceResponseDTO;
+import com.dongnaebook.domain.region.Region;
+import com.dongnaebook.domain.region.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Coordinate;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlaceService {
     private final PlaceRepository placeRepository;
+    private final RegionRepository regionRepository;
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
 
@@ -29,15 +32,26 @@ public class PlaceService {
         Point location = createPoint(requestDTO.getLongitude(), requestDTO.getLatitude());
         location.setSRID(4326);
 
+        Region region = findRegionByAddress(requestDTO.getAddress());
+
         Place place = Place.builder()
                 .name(requestDTO.getName())
                 .address(requestDTO.getAddress())
                 .location(location)
+                .region(region)
                 .build();
 
 
         Place savedPlace = placeRepository.save(place);
         return PlaceMapper.toResponseDTO(savedPlace);
+    }
+
+    private Region findRegionByAddress(String address) {
+        List<Region> regions = regionRepository.findBestMatchingRegion(address);
+        if (regions.isEmpty()) {
+            throw new NotFoundException("Region not found for address: " + address);
+        }
+        return regions.get(0);
     }
 
     public List<PlaceResponseDTO> getAll() {
