@@ -26,4 +26,7 @@ public class User {
 
     @Column(unique=true)
     private String kakaoId;
+
+    @Column(unique = true)
+    private String googleId;
 }

@@ -36,10 +36,6 @@ public class JwtTokenProvider {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         String email = claims.getSubject();
 
-
-        System.out.println("[getAuthentication] email: " + email);
-        System.out.println("[getAuthentication] claims: " + claims);
-
         User principal = new User(email, "", Collections.emptyList());
         return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }

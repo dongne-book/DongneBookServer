@@ -22,9 +22,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/signup", "/api/users/login","/oauth/kakao/callback").permitAll() // 회원가입, 로그인은 인증 없이해야함
+                        .requestMatchers("/api/users/signup", "/api/users/login","/oauth/kakao/callback","/oauth/google/callback").permitAll() // 회원가입, 로그인은 인증 없이해야함
                         .anyRequest().authenticated()
                 )
+                .httpBasic(httpBasic->httpBasic.disable())
+                .formLogin(formLogin->formLogin.disable())
          .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
