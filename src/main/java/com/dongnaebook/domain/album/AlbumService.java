@@ -5,7 +5,7 @@ import com.dongnaebook.domain.album.DTO.AlbumDetailDTO;
 import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
 import com.dongnaebook.domain.album.DTO.AlbumResponseDTO;
 
-import com.dongnaebook.domain.post.DTO.PostDetailDTO;
+import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import com.dongnaebook.domain.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class AlbumService {
     @Transactional(readOnly = true)
     public AlbumDetailDTO getById(Long id) {
         Album album = albumRepository.findById(id).orElseThrow(() -> new NotFoundException("Album not found"));
-        List<PostDetailDTO> posts = postService.getPostsByAlbumId(id);
+        List<PostResponseDTO> posts = postService.getPostsByAlbumId(id);
         return AlbumMapper.toDetailDTO(album, posts);
     }
 

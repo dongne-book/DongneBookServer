@@ -1,8 +1,6 @@
 package com.dongnaebook.domain.post;
 
 
-import com.dongnaebook.domain.post.DTO.PostDetailDTO;
-import com.dongnaebook.domain.post.PostService;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +40,13 @@ public class PostController {
     }
 
     @GetMapping("/albums/{albumId}")
-    public List<PostDetailDTO> getPostsByAlbumId(@PathVariable Long albumId) {
+    public List<PostResponseDTO> getPostsByAlbumId(@PathVariable Long albumId) {
         return postService.getPostsByAlbumId(albumId);
+    }
+
+    @GetMapping("/places/{placeId}")
+    public List<PostResponseDTO> getPostsByPlaceId(@PathVariable Long placeId) {
+        return postService.getPostsByPlaceId(placeId);
     }
 
 }

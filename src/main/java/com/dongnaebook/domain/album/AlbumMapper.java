@@ -3,10 +3,9 @@ package com.dongnaebook.domain.album;
 import com.dongnaebook.domain.album.DTO.AlbumDetailDTO;
 import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
 import com.dongnaebook.domain.album.DTO.AlbumResponseDTO;
-import com.dongnaebook.domain.post.DTO.PostDetailDTO;
+import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AlbumMapper {
    public static AlbumResponseDTO toResponseDto(Album album) {
@@ -22,7 +21,7 @@ public class AlbumMapper {
                .build();
    }
 
-    public static AlbumDetailDTO toDetailDTO(Album album, List<PostDetailDTO> posts) {
+    public static AlbumDetailDTO toDetailDTO(Album album, List<PostResponseDTO> posts) {
         return AlbumDetailDTO.builder()
                 .id(album.getId())
                 .name(album.getName())
