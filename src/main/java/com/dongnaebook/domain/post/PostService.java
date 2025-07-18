@@ -7,6 +7,7 @@ import com.dongnaebook.domain.place.Place;
 import com.dongnaebook.domain.place.PlaceRepository;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final PlaceRepository placeRepository;
     private final AlbumRepository albumRepository;
+
+    public Post getPostOrThrow(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. id=" + postId));
+    }
 
     public PostResponseDTO create(PostRequestDTO requestDto) {
         Place place = placeRepository.findById(requestDto.getPlaceId())
