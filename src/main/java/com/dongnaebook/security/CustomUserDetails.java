@@ -1,27 +1,18 @@
 package com.dongnaebook.security;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
 
+@Getter
+@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
     private final Long id;
     private final String email;
-
-    public CustomUserDetails(Long id, String email) {
-        this.id = id;
-        this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 
     @Override public Collection<? extends GrantedAuthority> getAuthorities() { return Collections.emptyList(); }
     @Override public String getPassword() { return ""; }
