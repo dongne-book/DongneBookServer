@@ -34,17 +34,19 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        String email = claims.getSubject();
 
+        String email = claims.getSubject();
+        Long userId = claims.get("userId", Long.class);
 
         System.out.println("[getAuthentication] email: " + email);
         System.out.println("[getAuthentication] claims: " + claims);
 
-        User principal = new User(email, "", Collections.emptyList());
+//        User principal = new User(email, "", Collections.emptyList());
+        CustomUserDetails principal = new CustomUserDetails(userId, email);
         return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
     //토큰 생성
-    public String generateToken(String email) {
+    public String generateToken(Long userId, String email) {
         long now = System.currentTimeMillis();
         long exp = 1000 * 60 * 60 * 24;
 
@@ -52,6 +54,7 @@ public class JwtTokenProvider {
         System.out.println("[generateToken] 발급 email: " + email);
         String token = Jwts.builder()
                 .setSubject(email)
+                .claim("userId", userId)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now+exp))
                 .signWith(Key, SignatureAlgorithm.HS256)

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,6 +80,16 @@ public class PostService {
 
     public List<PostResponseDTO> getPostsByPlaceId(Long placeId) {
         List<Post> posts = postRepository.findByPlace_Id(placeId);
+        return posts.stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostResponseDTO> getPostsByPlaceIdAndMonth(Long placeId, YearMonth targetMonth ) {
+        LocalDate start = targetMonth.atDay(1);        // 2025-07-01
+        LocalDate end = targetMonth.atEndOfMonth();    // 2025-07-31
+
+        List<Post> posts = postRepository.findByPlace_IdAndVisitDateBetween(placeId, start, end);
         return posts.stream()
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());

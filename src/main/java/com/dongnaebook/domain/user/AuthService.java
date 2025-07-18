@@ -43,7 +43,7 @@ public class AuthService {
         }
         //기능만 확인하고 이메일하고 비밀번호 둘 다 안내메시지 같은걸로 묶기
 
-        String token = jwtTokenProvider.generateToken(user.getEmail());
+        String token = jwtTokenProvider.generateToken(user.getId(),user.getEmail());
 
         return UserLoginResponseDTO.builder()
                 .token(token)

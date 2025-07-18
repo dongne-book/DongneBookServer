@@ -1,13 +1,14 @@
 package com.dongnaebook.domain.pamphlets;
 
-import com.dongnaebook.domain.pamphlets.DTO.PamphletDTO;
+import com.dongnaebook.domain.pamphlets.DTO.PamphletRequestDTO;
+import com.dongnaebook.domain.pamphlets.DTO.PamphletResponseDTO;
+import com.dongnaebook.domain.region.DTO.RegionResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pamphlets")
@@ -16,21 +17,26 @@ public class PamphletsController {
     private final PamphletService pamphletService;
 
     @PostMapping
-    public ResponseEntity<String> makePamphlet() {
-        return ResponseEntity.ok("잘 만들어짐");
+    public ResponseEntity<PamphletResponseDTO> makePamphlet(@RequestBody PamphletRequestDTO pamphletRequestDTO) {
+        return ResponseEntity.ok(pamphletService.createPamphlet(pamphletRequestDTO));
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<PamphletDTO>>  getPamphletByRegion(@RequestParam String region) {
-//        return ;
-//    }
+    @PostMapping("/gpt")
+    public ResponseEntity<PamphletResponseDTO> makeUseGpt(String regionCode) {
+        return ResponseEntity.ok(pamphletService.generatePamphletByGpt(regionCode));
+    }
+
+    @GetMapping("/search/")
+    public ResponseEntity<Map<RegionResponseDTO, List<PamphletResponseDTO>>> getPamphletByRegion(@RequestParam String region) {
+        return ResponseEntity.ok(pamphletService.getPamphletByRegion(region));
+    }
 //    @GetMapping
 //    public ResponseEntity<List<PamphletDTO>>  getPamphletByKeyword(@RequestParam String keyword) {
 //        return ;
 //    }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePamphlet(@PathVariable Long id) {
-        return ResponseEntity.ok("홍보책자 삭제");
+        return ResponseEntity.ok(pamphletService.deletePamphlet(id));
     }
 }

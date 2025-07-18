@@ -1,5 +1,6 @@
 package com.dongnaebook.domain.place;
 
+import com.dongnaebook.domain.place.DTO.PlaceSimpleDTO;
 import com.dongnaebook.domain.place.Place;
 import com.dongnaebook.domain.place.DTO.PlaceResponseDTO;
 import com.dongnaebook.domain.region.RegionMapper;
@@ -15,4 +16,13 @@ public class PlaceMapper {
                .region(RegionMapper.toResponseDTO(place.getRegion()))
                .build();
    }
+
+    public static PlaceSimpleDTO toSimpleDTO(Place place) {
+        return PlaceSimpleDTO.builder()
+                .id(place.getId())
+                .name(place.getName())
+                .address(place.getAddress())
+                .build();
+    }
+
 }

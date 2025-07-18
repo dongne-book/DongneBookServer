@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class PamphletDTO {
+public class PamphletRequestDTO {
+    private String regionCode;
     private String title;
     private String content;
     private String version;

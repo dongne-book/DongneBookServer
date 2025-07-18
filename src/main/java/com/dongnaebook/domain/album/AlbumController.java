@@ -19,10 +19,10 @@ public class AlbumController {
         return albumService.getAll();
     }
 
-    @GetMapping("{id}")
-    public AlbumResponseDTO getById(@PathVariable Long id) {
-        return albumService.getById(id);
-    }
+//    @GetMapping("{id}")
+//    public AlbumResponseDTO getById(@PathVariable Long id) {
+//        return albumService.getById(id);
+//    }
 
     @PostMapping("")
     public AlbumResponseDTO create(@RequestBody AlbumRequestDTO requestDto) {
