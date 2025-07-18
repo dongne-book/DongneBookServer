@@ -10,4 +10,10 @@ public class RegionMapper {
                 .name(region.getName())
                .build();
    }
+    public static Region toRegion(RegionResponseDTO region) {
+        return Region.builder()
+                .code(region.getCode())
+                .name(region.getName())
+                .build();
+    }
 }
