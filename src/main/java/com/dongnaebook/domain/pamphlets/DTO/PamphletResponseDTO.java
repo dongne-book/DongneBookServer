@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class PamphletResponseDTO {
-    private String regionCode;
+    private String regionName;
     private String title;
     private String content;
     private String version;

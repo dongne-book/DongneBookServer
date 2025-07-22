@@ -4,7 +4,6 @@ import com.dongnaebook.common.exception.NotFoundException;
 import com.dongnaebook.domain.user.DTO.PasswordDTO;
 import com.dongnaebook.domain.user.DTO.UserRequestDTO;
 import com.dongnaebook.domain.user.DTO.UserResponseDTO;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,10 +17,6 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public User getUser(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("User not found"));
-    }
 
     @Transactional(readOnly = true)
     public UserResponseDTO getById(Long id) {
@@ -38,6 +33,7 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public UserResponseDTO getByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -47,7 +43,8 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO setUser(String email, UserRequestDTO userRequestDTO) {
-        User user = getUser(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
         user.setProfile(userRequestDTO);
         userRepository.save(user);
         return UserMapper.toResponseDto(user);
@@ -55,7 +52,8 @@ public class UserService {
 
     @Transactional
     public Boolean setPassword(String email, PasswordDTO passWordDTO) {
-        User user = getUser(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         if(passwordEncoder.matches(passWordDTO.getPassword(), user.getPassword())) {
             user.setPassword(passwordEncoder.encode(passWordDTO.getConfirmPassword()));

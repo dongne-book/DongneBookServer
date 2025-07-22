@@ -1,4 +1,4 @@
-package com.dongnaebook.domain.pamphlets.pampletbookmark;
+package com.dongnaebook.domain.pamphletbookmark;
 
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.pamphlets.Pamphlet;
@@ -8,13 +8,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "pamphlet_bookmarks")
+@Table(name = "pamphlet-bookmarks")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class PamphletBookmark {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
