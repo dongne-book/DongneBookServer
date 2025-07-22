@@ -11,7 +11,7 @@ public interface PamphletBookMarkRepository extends JpaRepository<PamphletBookma
 
     Optional<PamphletBookmark> findByUserAndPamphlet(User user, Pamphlet pamphlet);
 
-    List<PamphletBookmark> findByUser(User user);
+    List<PamphletBookmark> findByUser_Email(String userEmail);
 
     boolean existsByUserAndPamphlet(User user, Pamphlet pamphlet);
 
