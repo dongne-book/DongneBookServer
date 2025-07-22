@@ -17,8 +17,8 @@ public class PostLikeService {
     private final PostService postService;
 
     @Transactional
-    public void likePost(Long userId, Long pamphletId) {
-        User user = userService.getUserOrThrow(userId);
+    public void likePost(String email, Long pamphletId) {
+        User user = userService.getUser(email);
         Post post = postService.getPostOrThrow(pamphletId);
 
         if (postLikeRepository.existsByUserAndPost(user, post)) {
@@ -32,8 +32,8 @@ public class PostLikeService {
     }
 
     @Transactional
-    public void unlikePost(Long userId, Long postId) {
-        User user = userService.getUserOrThrow(userId);
+    public void unlikePost(String email, Long postId) {
+        User user = userService.getUser(email);
         Post post = postService.getPostOrThrow(postId);
 
         postLikeRepository.deleteByUserAndPost(user, post);

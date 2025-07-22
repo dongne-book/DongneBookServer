@@ -1,12 +1,13 @@
 package com.dongnaebook.domain.user;
 
+import com.dongnaebook.domain.user.DTO.UserRequestDTO;
+import com.dongnaebook.domain.user.DTO.UserResponseDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name="users")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -21,6 +22,7 @@ public class User {
     @Column(nullable=false)
     private String nickname;
 
+    @Setter
     @Column(nullable=true)
     private String password;
 
@@ -29,4 +31,9 @@ public class User {
 
     @Column(unique = true)
     private String googleId;
+
+    public void setProfile(UserRequestDTO userRequestDTO) {
+        this.email = userRequestDTO.getEmail();
+        this.nickname = userRequestDTO.getNickname();
+    }
 }

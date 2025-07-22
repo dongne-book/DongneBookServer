@@ -76,7 +76,7 @@ public class KakaoAuthService {
                     );
                 });
 
-        String jwt = jwtTokenProvider.generateToken(user.getId(),user.getEmail());
+        String jwt = jwtTokenProvider.generateToken(user.getEmail());
         return Map.of(
                 "token", jwt,
                 "user", Map.of(

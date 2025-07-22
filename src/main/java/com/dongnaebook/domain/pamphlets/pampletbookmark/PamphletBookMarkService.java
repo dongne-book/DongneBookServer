@@ -1,6 +1,8 @@
 package com.dongnaebook.domain.pamphlets.pampletbookmark;
 
+import com.dongnaebook.domain.pamphlets.DTO.PamphletResponseDTO;
 import com.dongnaebook.domain.pamphlets.Pamphlet;
+import com.dongnaebook.domain.pamphlets.PamphletMapper;
 import com.dongnaebook.domain.pamphlets.PamphletService;
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserService;
@@ -20,8 +22,8 @@ public class PamphletBookMarkService {
     private final PamphletService pamphletService;
 
     @Transactional
-    public void bookmarkPamphlet(Long userId, Long pamphletId) {
-        User user = userService.getUserOrThrow(userId);
+    public void bookmarkPamphlet(String email, Long pamphletId) {
+        User user = userService.getUser(email);
         Pamphlet pamphlet = pamphletService.getPamphletOrThrow(pamphletId);
 
         if (pamphletBookMarkRepository.existsByUserAndPamphlet(user, pamphlet)) {
@@ -37,16 +39,16 @@ public class PamphletBookMarkService {
     }
 
     @Transactional
-    public void unbookmarkPamphlet(Long userId, Long pamphletId) {
-        User user = userService.getUserOrThrow(userId);
+    public void unbookmarkPamphlet(String email, Long pamphletId) {
+        User user = userService.getUser(email);
         Pamphlet pamphlet = pamphletService.getPamphletOrThrow(pamphletId);
 
         pamphletBookMarkRepository.deleteByUserAndPamphlet(user, pamphlet);
     }
 
     @Transactional(readOnly = true)
-    public List<PamphletBookmark> getBookmarkedPamphlets(Long userId) {
-        User user = userService.getUserOrThrow(userId);
-        return pamphletBookMarkRepository.findByUser(user);
+    public List<PamphletResponseDTO> getBookmarkedPamphlets(String email) {
+        return pamphletBookMarkRepository.findByUser_Email(email).stream()
+                .map((p) -> PamphletMapper.toDTO(p.getPamphlet())).toList();
     }
 }
