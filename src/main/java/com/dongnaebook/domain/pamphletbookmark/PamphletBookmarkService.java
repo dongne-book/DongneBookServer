@@ -38,7 +38,6 @@ public class PamphletBookmarkService {
         }else{
             return false;
         }
-
     }
 
 }
