@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,50 +26,60 @@ public class PamphletService {
     private final PamphletRepository pamphletRepository;
     private final GptClient gptClient; // GPT 호출용 커스텀 클라이언트 (예: REST 또는 OpenAI SDK)
     private final PlaceService placeService;
-    private final PostService postService;
+    private final PostService pamphletService;
     private final RegionService regionService;
 
-    public Pamphlet getPamphletOrThrow(Long pamphletId) {
-        return pamphletRepository.findById(pamphletId)
-                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. id=" + pamphletId));
+    @Transactional(readOnly = true)
+    public PamphletResponseDTO getById(Long id) {
+        Pamphlet pamphlet = pamphletRepository.findById(id).orElseThrow(() -> new NotFoundException("Pamphlet not found"));
+        return PamphletMapper.toResponseDto(pamphlet);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PamphletResponseDTO> getAll() {
+        return pamphletRepository.findAll().stream()
+                .map(PamphletMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PamphletResponseDTO> getPamphletsByRegionCode(String regionCode) {
+        List<Pamphlet> pamphlets = pamphletRepository.findByRegion_Code(regionCode);
+        return pamphlets.stream()
+                .map(PamphletMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PamphletResponseDTO> getPamphletsByRegionName(String name) {
+        List<Pamphlet> pamphlets = pamphletRepository.findByRegion_NameContaining(name);
+        return pamphlets.stream()
+                .map(PamphletMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public PamphletResponseDTO createPamphlet(PamphletRequestDTO pamphletRequestDTO) {
-        Pamphlet pamphlet = PamphletMapper.makingPamphlet(RegionMapper.toRegion(regionService.checkRegion(pamphletRequestDTO.getRegionCode())),pamphletRequestDTO);
+        Pamphlet pamphlet = PamphletMapper.toEntity(RegionMapper.toRegion(regionService.checkRegion(pamphletRequestDTO.getRegionCode())),pamphletRequestDTO);
         pamphletRepository.save(pamphlet);
 
-        return PamphletMapper.toDTO(pamphlet);
+        return PamphletMapper.toResponseDto(pamphlet);
     }
 
     // update
     @Transactional
-    public PamphletResponseDTO updatePamphlet(Long pamphletId, PamphletRequestDTO pamphletRequestDTO) {
+    public PamphletResponseDTO update(Long pamphletId, PamphletRequestDTO pamphletRequestDTO) {
         Pamphlet pamphlet = pamphletRepository.findById(pamphletId).orElseThrow(() -> new NotFoundException("없는 팜플랫입니다"));
         pamphlet.update(pamphletRequestDTO);
-        return PamphletMapper.toDTO(pamphlet);
-    }
-
-    // 지역 이름으로 get
-    @Transactional
-    public Map<RegionResponseDTO, List<PamphletResponseDTO>> getPamphletByRegion(String regionName) {
-        List<RegionResponseDTO> regionList = regionService.findByRegionName(regionName);
-
-        Map<RegionResponseDTO, List<PamphletResponseDTO>> regionMap = new HashMap<>();
-
-        for (RegionResponseDTO region : regionList) {
-            regionMap.put(region, pamphletRepository.findByRegion_Code(region.getCode()).stream().map(PamphletMapper::toDTO).toList());
-        }
-        return regionMap;
+        return PamphletMapper.toResponseDto(pamphlet);
     }
 
     @Transactional
-    public String deletePamphlet(Long pamphletId) {
+    public String deleteById(Long pamphletId) {
         Pamphlet pamphlet = pamphletRepository.findById(pamphletId).orElseThrow(() -> new NotFoundException("없는 팜플랫입니다"));
         pamphletRepository.delete(pamphlet);
         return pamphlet.getTitle() + "삭제 되었습니다";
     }
-
 
     /**
      * 특정 지역(regionCode)의 record를 기반으로 pamphlet 생성
@@ -82,7 +90,7 @@ public class PamphletService {
                 .collect(Collectors.joining("\n"));
     }
     @Transactional
-    public PamphletResponseDTO generatePamphletByGpt(String regionCode) {
+    public PamphletResponseDTO create(String regionCode) {
         // 1. 지역 조회
         RegionResponseDTO regionDTO = regionService.checkRegion(regionCode);
 
@@ -100,7 +108,7 @@ public class PamphletService {
             throw new IllegalStateException("해당 지역의 장소가 없습니다.");
         }
 
-        List<List<PostResponseDTO>> postInPlace = placeList.stream().map((place) -> postService.getPostsByPlaceIdAndMonth(place.getId(), lastMonth))
+        List<List<PostResponseDTO>> postInPlace = placeList.stream().map((place) -> pamphletService.getPostsByPlaceIdAndMonth(place.getId(), lastMonth))
                 .sorted((list1, list2) -> Integer.compare(list2.size(), list1.size()))  // 내림차순 정렬
                 .limit(7)  // 상위 7개만 선택
                 .toList();
@@ -124,12 +132,12 @@ public class PamphletService {
                 .version(version)
                 .build();
         // 5. Pamphlet 생성 및 저장
-        Pamphlet pamphlet = PamphletMapper.makingPamphlet(
+        Pamphlet pamphlet = PamphletMapper.toEntity(
                 RegionMapper.toRegion(regionDTO), pamphletRequestDTO);
 
         pamphletRepository.save(pamphlet);
 
-        return PamphletMapper.toDTO(pamphlet);
+        return PamphletMapper.toResponseDto(pamphlet);
     }
 
 }

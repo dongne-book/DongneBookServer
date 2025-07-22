@@ -5,14 +5,15 @@ import com.dongnaebook.domain.pamphlets.DTO.PamphletResponseDTO;
 import com.dongnaebook.domain.region.Region;
 
 public class PamphletMapper {
-    public static PamphletResponseDTO toDTO(Pamphlet pamphlet) {
+    public static PamphletResponseDTO toResponseDto(Pamphlet pamphlet) {
         return PamphletResponseDTO.builder()
+                .regionName(pamphlet.getRegion().getName())
                 .title(pamphlet.getTitle())
                 .content(pamphlet.getContent())
                 .version(pamphlet.getVersion())
                 .build();
     }
-    public static Pamphlet makingPamphlet(Region region, PamphletRequestDTO requestDTO) {
+    public static Pamphlet toEntity(Region region, PamphletRequestDTO requestDTO) {
         return Pamphlet.builder()
                 .region(region)
                 .title(requestDTO.getTitle())

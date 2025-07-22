@@ -1,4 +1,4 @@
-package com.dongnaebook.domain.pamphlets.pampletbookmark;
+package com.dongnaebook.domain.pamphletbookmark;
 
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.pamphlets.Pamphlet;
@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class PamphletBookmark {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
