@@ -22,5 +22,4 @@ public class AlbumDetailDTO extends BaseDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private List<PostResponseDTO> posts;
-
 }

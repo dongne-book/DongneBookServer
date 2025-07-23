@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,4 +83,32 @@ public class PostService {
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
+
+
+    @Transactional(readOnly = true)
+    public Post getPostEntityById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> getPostEntitiesByIds(List<Long> ids) {
+        return postRepository.findAllById(ids);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDTO> getPostByIds(List<Long> ids) {
+        return postRepository.findAllById(ids).stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDTO> getPostByDate(LocalDate date) {
+        List<Post> posts = postRepository.findByDate(date);
+        return posts.stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
 }
