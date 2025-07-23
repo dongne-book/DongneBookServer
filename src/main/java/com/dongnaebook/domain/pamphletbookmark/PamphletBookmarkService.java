@@ -1,12 +1,16 @@
 package com.dongnaebook.domain.pamphletbookmark;
 
 import com.dongnaebook.common.exception.NotFoundException;
+import com.dongnaebook.domain.pamphlets.DTO.PamphletResponseDTO;
+import com.dongnaebook.domain.pamphlets.PamphletMapper;
 import com.dongnaebook.domain.pamphlets.PamphletRepository;
 import com.dongnaebook.domain.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +42,13 @@ public class PamphletBookmarkService {
         }else{
             return false;
         }
+    }
+
+    @Transactional
+    public List<PamphletResponseDTO> bookmarkedPamphlets(String email) {
+        return pamphletBookMarkRepository.findByUser_Email(email)
+                .stream().map(PamphletBookmark::getPamphlet).toList()
+                .stream().map(PamphletMapper::toResponseDto).toList();
     }
 
 }

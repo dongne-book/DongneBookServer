@@ -1,6 +1,7 @@
 package com.dongnaebook.domain.post;
 
 import com.dongnaebook.domain.album_group.AlbumGroup;
+import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -13,4 +14,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByPlace_Id(Long placeId);
 
     List<Post> findByPlace_IdAndVisitDateBetween(Long placeId, LocalDate startDate, LocalDate endDate);
+
+    List<Post> findByCreatedBy(String email);
+
+    List<Post> findByAlbum_IdAndCreatedBy(Long albumId, String email);
+
 }
