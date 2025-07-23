@@ -1,13 +1,16 @@
 package com.dongnaebook.domain.postlike;
 
 import com.dongnaebook.common.exception.NotFoundException;
-import com.dongnaebook.domain.pamphletbookmark.PamphletBookmark;
+import com.dongnaebook.domain.post.DTO.PostResponseDTO;
+import com.dongnaebook.domain.post.PostMapper;
 import com.dongnaebook.domain.post.PostRepository;
 import com.dongnaebook.domain.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

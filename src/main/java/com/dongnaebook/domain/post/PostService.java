@@ -24,11 +24,6 @@ public class PostService {
     private final PlaceRepository placeRepository;
     private final AlbumRepository albumRepository;
 
-    public Post getPostOrThrow(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. id=" + postId));
-    }
-
     public PostResponseDTO create(PostRequestDTO requestDto) {
         Place place = placeRepository.findById(requestDto.getPlaceId())
                 .orElseThrow(() -> new NotFoundException("Place not found"));
@@ -100,4 +95,13 @@ public class PostService {
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
+
+    public List<PostResponseDTO> getPostsByUserEmail(String email) {
+        return postRepository.findByCreatedBy(email).stream().map(PostMapper::toResponseDto).toList();
+    }
+
+    public List<PostResponseDTO> getPostsByUserEmailAndAlbum(String email, Long albumId) {
+        return postRepository.findByAlbum_IdAndCreatedBy(albumId, email).stream().map(PostMapper::toResponseDto).toList();
+    }
+
 }

@@ -6,8 +6,6 @@ import com.dongnaebook.domain.region.Region;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name="pamphlets")
 @Getter

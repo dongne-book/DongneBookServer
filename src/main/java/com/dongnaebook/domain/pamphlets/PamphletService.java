@@ -11,7 +11,6 @@ import com.dongnaebook.domain.post.PostService;
 import com.dongnaebook.domain.region.DTO.RegionResponseDTO;
 import com.dongnaebook.domain.region.RegionMapper;
 import com.dongnaebook.domain.region.RegionService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,10 +74,9 @@ public class PamphletService {
     }
 
     @Transactional
-    public String deleteById(Long pamphletId) {
+    public void deleteById(Long pamphletId) {
         Pamphlet pamphlet = pamphletRepository.findById(pamphletId).orElseThrow(() -> new NotFoundException("없는 팜플랫입니다"));
         pamphletRepository.delete(pamphlet);
-        return pamphlet.getTitle() + "삭제 되었습니다";
     }
 
     /**

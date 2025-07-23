@@ -1,16 +1,17 @@
 package com.dongnaebook.domain.pamphlets.DTO;
 
-import lombok.Builder;
-import lombok.Data;
+import com.dongnaebook.common.domain.DTO.BaseDTO;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
-public class PamphletResponseDTO {
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PamphletResponseDTO extends BaseDTO {
     private String regionName;
     private String title;
     private String content;
     private String version;
-    private LocalDateTime timestamp;
 }
