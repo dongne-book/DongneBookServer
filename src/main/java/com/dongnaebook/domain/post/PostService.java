@@ -7,7 +7,6 @@ import com.dongnaebook.domain.place.Place;
 import com.dongnaebook.domain.place.PlaceRepository;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,8 +95,13 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostResponseDTO> getPostsByUserEmail(String email) {
+    public List<PostResponseDTO> getPostsByMyEmail(String email) {
         return postRepository.findByCreatedBy(email).stream().map(PostMapper::toResponseDto).toList();
+    }
+    public List<PostResponseDTO> getPostsByUserEmail(String email) {
+        return postRepository.findByCreatedBy(email).stream().filter(Post::getIsPublic)
+                .map(PostMapper::toResponseDto)
+                .toList();
     }
 
     public List<PostResponseDTO> getPostsByUserEmailAndAlbum(String email, Long albumId) {

@@ -1,6 +1,8 @@
 package com.dongnaebook.security;
 
 import java.io.IOException;
+import java.util.List;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +14,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
+    // 화이트리스트 URI들
+    private final List<String> whiteList = List.of(
+            "/auth/", "/oauth/", "/public/", "/login", "/signup"
+    );
+
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -21,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-        if(requestURI.startsWith("/oauth/")) {
+        if(isWhiteListed(requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -42,5 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
     }
 
-
+    private boolean isWhiteListed(String uri) {
+        return whiteList.stream().anyMatch(uri::startsWith);
+    }
 }

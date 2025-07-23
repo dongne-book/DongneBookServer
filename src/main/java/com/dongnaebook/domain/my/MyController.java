@@ -41,7 +41,7 @@ public class MyController {
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDTO>> posts(@AuthenticationPrincipal UserDetails userDetails) {
         String userEmail = userDetails.getUsername();
-        return ResponseEntity.ok(postService.getPostsByUserEmail(userEmail));
+        return ResponseEntity.ok(postService.getPostsByMyEmail(userEmail));
     }
     @GetMapping("/posts/{albumId}")
     public ResponseEntity<List<PostResponseDTO>> postsInAlbums(@PathVariable Long albumId, @AuthenticationPrincipal UserDetails userDetails) {
