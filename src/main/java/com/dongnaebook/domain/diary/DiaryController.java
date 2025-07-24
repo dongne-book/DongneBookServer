@@ -1,6 +1,12 @@
 package com.dongnaebook.domain.diary;
 
 import com.dongnaebook.domain.diary.DTO.DiaryRequestDTO;
+import com.dongnaebook.domain.post.DTO.PostRequestDTO;
+import com.dongnaebook.domain.post.DTO.PostResponseDTO;
+import com.dongnaebook.domain.post.Post;
+import com.dongnaebook.domain.post.PostMapper;
+import com.dongnaebook.domain.post.PostRepository;
+import com.dongnaebook.domain.post.PostService;
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.diary.DTO.DiaryResponseDTO;
 import com.dongnaebook.domain.diary.DTO.DiaryDetailDTO;

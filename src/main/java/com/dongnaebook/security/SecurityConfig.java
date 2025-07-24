@@ -22,7 +22,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signup", "/api/auth/login","/oauth/kakao/callback","/oauth/google/callback").permitAll() // 회원가입, 로그인은 인증 없이해야함
+//                        .requestMatchers("/api/auth/signup", "/api/auth/login","/oauth/kakao/callback","/oauth/google/callback").permitAll() // 회원가입, 로그인은 인증 없이해야함
+                                .requestMatchers("/api/**").permitAll() // 회원가입, 로그인은 인증 없이해야함
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic->httpBasic.disable())

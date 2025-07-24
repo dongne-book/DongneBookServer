@@ -4,7 +4,9 @@ import com.dongnaebook.common.exception.NotFoundException;
 import com.dongnaebook.domain.album.Album;
 import com.dongnaebook.domain.album.AlbumRepository;
 import com.dongnaebook.domain.place.Place;
+import com.dongnaebook.domain.place.PlaceController;
 import com.dongnaebook.domain.place.PlaceRepository;
+import com.dongnaebook.domain.place.PlaceService;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -105,7 +107,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponseDTO> getPostByDate(LocalDate date) {
-        List<Post> posts = postRepository.findByDate(date);
+        List<Post> posts = postRepository.findByVisitDate(date);
         return posts.stream()
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());

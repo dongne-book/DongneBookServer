@@ -36,8 +36,6 @@ public class DiaryService {
         String content = request.getContent();
         List<Long> postIds = request.getPostIds();
 
-        //자동생성은 일단 킵
-
         //수동생성
         Diary diary = DiaryMapper.toEntity(request, title, content);
         diaryRepository.save(diary);

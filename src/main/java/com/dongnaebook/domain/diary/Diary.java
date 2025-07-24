@@ -38,9 +38,4 @@ public class Diary extends BaseEntity {
         this.title = title;
         this.content = content;
     }
-
-
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="post_id", referencedColumnName="id", nullable=false)
-    private Post post;
 }
