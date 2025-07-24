@@ -29,4 +29,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             @Param("lat") double lat,
             @Param("distance") double distance
     );
+
+    List<Place> findByRegion_Code(String region);
 }

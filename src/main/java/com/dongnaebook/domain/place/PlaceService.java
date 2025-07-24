@@ -3,6 +3,7 @@ package com.dongnaebook.domain.place;
 import com.dongnaebook.common.exception.NotFoundException;
 import com.dongnaebook.domain.place.DTO.PlaceRequestDTO;
 import com.dongnaebook.domain.place.DTO.PlaceResponseDTO;
+import com.dongnaebook.domain.place.DTO.PlaceSimpleDTO;
 import com.dongnaebook.domain.region.Region;
 import com.dongnaebook.domain.region.RegionRepository;
 import lombok.RequiredArgsConstructor;
@@ -80,6 +81,12 @@ public class PlaceService {
         return placeRepository.findByNameAndAddress(name, address)
                 .stream()
                 .map(PlaceMapper::toResponseDTO)
+                .toList();
+    }
+
+    public List<PlaceSimpleDTO> getPlaceSimpleDTOByRegion(String regionCode) {
+        return placeRepository.findByRegion_Code(regionCode).stream()
+                .map(PlaceMapper::toSimpleDTO)
                 .toList();
     }
 

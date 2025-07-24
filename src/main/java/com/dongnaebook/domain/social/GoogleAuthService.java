@@ -74,8 +74,8 @@ public class GoogleAuthService {
                                     .build()
                     );
                 });
-
-        String jwt = jwtTokenProvider.generateToken(user.getEmail());
+        List<String> roles = List.of("ROLE_USER");
+        String jwt = jwtTokenProvider.generateToken(user.getEmail(), roles);
         return Map.of(
                 "token", jwt,
                 "user", Map.of(

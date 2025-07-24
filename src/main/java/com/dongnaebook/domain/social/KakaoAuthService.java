@@ -12,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 @Service
 @RequiredArgsConstructor
@@ -75,8 +76,8 @@ public class KakaoAuthService {
                                     .build()
                     );
                 });
-
-        String jwt = jwtTokenProvider.generateToken(user.getEmail());
+        List<String> roles = List.of("ROLE_USER");
+        String jwt = jwtTokenProvider.generateToken(user.getEmail(), roles);
         return Map.of(
                 "token", jwt,
                 "user", Map.of(

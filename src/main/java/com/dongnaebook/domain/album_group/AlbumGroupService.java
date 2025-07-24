@@ -2,13 +2,19 @@ package com.dongnaebook.domain.album_group;
 
 import com.dongnaebook.common.exception.NotFoundException;
 import com.dongnaebook.domain.album.Album;
+import com.dongnaebook.domain.album.AlbumMapper;
 import com.dongnaebook.domain.album.AlbumRepository;
+import com.dongnaebook.domain.album.DTO.AlbumResponseDTO;
 import com.dongnaebook.domain.album_group.DTO.AlbumGroupResponseDTO;
+import com.dongnaebook.domain.pamphletbookmark.PamphletBookmark;
+import com.dongnaebook.domain.pamphlets.DTO.PamphletResponseDTO;
+import com.dongnaebook.domain.pamphlets.PamphletMapper;
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -64,4 +70,10 @@ public class AlbumGroupService {
         ).collect(Collectors.toList());
     }
 
+    @Transactional
+    public List<AlbumResponseDTO> getAlbumByUserEmail(String email) {
+        return albumGroupRepository.findByUser_Email(email)
+                .stream().map(AlbumGroup::getAlbum).toList()
+                .stream().map(AlbumMapper::toResponseDto).toList();
+    }
 }

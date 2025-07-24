@@ -1,5 +1,6 @@
 package com.dongnaebook.domain.user.DTO;
 
+import com.dongnaebook.domain.admin.AdminLevel;
 import lombok.Getter;
 import lombok.Setter;
 
