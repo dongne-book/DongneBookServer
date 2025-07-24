@@ -19,4 +19,11 @@ public class UserMapper {
                 .nickname(user.getNickname())
                 .build();
    }
+
+    public static User toEntityByResponse(UserResponseDTO userResponseDTO) {
+        return User.builder()
+                .email(userResponseDTO.getEmail())
+                .nickname(userResponseDTO.getNickname())
+                .build();
+    }
 }

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,4 +84,28 @@ public class PostService {
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
+
+    public List<PostResponseDTO> getPostsByPlaceIdAndMonth(Long placeId, YearMonth targetMonth ) {
+        LocalDate start = targetMonth.atDay(1);        // 2025-07-01
+        LocalDate end = targetMonth.atEndOfMonth();    // 2025-07-31
+
+        List<Post> posts = postRepository.findByPlace_IdAndVisitDateBetween(placeId, start, end);
+        return posts.stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostResponseDTO> getPostsByMyEmail(String email) {
+        return postRepository.findByCreatedBy(email).stream().map(PostMapper::toResponseDto).toList();
+    }
+    public List<PostResponseDTO> getPostsByUserEmail(String email) {
+        return postRepository.findByCreatedBy(email).stream().filter(Post::getIsPublic)
+                .map(PostMapper::toResponseDto)
+                .toList();
+    }
+
+    public List<PostResponseDTO> getPostsByUserEmailAndAlbum(String email, Long albumId) {
+        return postRepository.findByAlbum_IdAndCreatedBy(albumId, email).stream().map(PostMapper::toResponseDto).toList();
+    }
+
 }

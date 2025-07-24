@@ -1,13 +1,11 @@
 package com.dongnaebook.domain.user;
 
 import com.dongnaebook.common.exception.NotFoundException;
-import com.dongnaebook.domain.album.Album;
-import com.dongnaebook.domain.album.AlbumMapper;
-import com.dongnaebook.domain.album.AlbumRepository;
-import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
-import com.dongnaebook.domain.album.DTO.AlbumResponseDTO;
+import com.dongnaebook.domain.user.DTO.PasswordDTO;
+import com.dongnaebook.domain.user.DTO.UserRequestDTO;
 import com.dongnaebook.domain.user.DTO.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public UserResponseDTO getById(Long id) {
@@ -34,10 +33,34 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public UserResponseDTO getByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         return UserMapper.toResponseDto(userRepository.save(user));
+    }
+
+    @Transactional
+    public UserResponseDTO setUser(String email, UserRequestDTO userRequestDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+        user.setProfile(userRequestDTO);
+        userRepository.save(user);
+        return UserMapper.toResponseDto(user);
+    }
+
+    @Transactional
+    public Boolean setPassword(String email, PasswordDTO passWordDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        if(passwordEncoder.matches(passWordDTO.getPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(passWordDTO.getConfirmPassword()));
+            userRepository.save(user);
+            return true;
+        }else{
+            return false;
+        }
     }
 }
