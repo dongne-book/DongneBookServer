@@ -48,6 +48,7 @@ public class PostController {
 
     @PostMapping("")
     public PostResponseDTO create(@RequestBody PostRequestDTO requestDto) {
+        System.out.println("CREATE POST!!! album id:" + requestDto.getAlbumId() + "Place ID:" + requestDto.getPlaceId());
         return postService.create(requestDto);
     }
 

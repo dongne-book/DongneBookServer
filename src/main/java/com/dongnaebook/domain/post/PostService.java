@@ -4,7 +4,9 @@ import com.dongnaebook.common.exception.NotFoundException;
 import com.dongnaebook.domain.album.Album;
 import com.dongnaebook.domain.album.AlbumRepository;
 import com.dongnaebook.domain.place.Place;
+import com.dongnaebook.domain.place.PlaceController;
 import com.dongnaebook.domain.place.PlaceRepository;
+import com.dongnaebook.domain.place.PlaceService;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDetailDTO;
@@ -104,6 +106,32 @@ public class PostService {
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());
     }
+
+
+    @Transactional(readOnly = true)
+    public Post getPostEntityById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> getPostEntitiesByIds(List<Long> ids) {
+        return postRepository.findAllById(ids);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDTO> getPostByIds(List<Long> ids) {
+        return postRepository.findAllById(ids).stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDTO> getPostByDate(LocalDate date) {
+        List<Post> posts = postRepository.findByVisitDate(date);
+        return posts.stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
 
     public List<PostResponseDTO> getPostsByPlaceIdAndMonth(Long placeId, YearMonth targetMonth ) {
         LocalDate start = targetMonth.atDay(1);        // 2025-07-01
