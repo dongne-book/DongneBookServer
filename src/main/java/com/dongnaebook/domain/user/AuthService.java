@@ -29,7 +29,25 @@ public class AuthService {
                 .email(userRequestDto.getEmail())
                 .nickname(userRequestDto.getNickname())
                 .password(passwordEncoder.encode(userRequestDto.getPassword()))
-                .adminLevel(userRequestDto.getAdminLevel())
+                .adminLevel(1)
+                .build();
+        User saved = userRepository.save(user);
+        return UserResponseDTO.builder()
+                .id(saved.getId())
+                .email(saved.getEmail())
+                .nickname(saved.getNickname())
+                .build();
+    }
+
+    public UserResponseDTO signupAdmin(UserRequestDTO userRequestDto){
+        if(userRepository.existsByEmail(userRequestDto.getEmail())) {
+            throw new DuplicateUserException("이미 존재하는 이메일입니다.");
+        }
+        User user = User.builder()
+                .email(userRequestDto.getEmail())
+                .nickname(userRequestDto.getNickname())
+                .password(passwordEncoder.encode(userRequestDto.getPassword()))
+                .adminLevel(2)
                 .build();
         User saved = userRepository.save(user);
         return UserResponseDTO.builder()
