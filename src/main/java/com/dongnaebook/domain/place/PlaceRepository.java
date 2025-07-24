@@ -1,12 +1,10 @@
 package com.dongnaebook.domain.place;
 
-import com.dongnaebook.domain.region.Region;
 import org.locationtech.jts.geom.Point;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {

@@ -1,6 +1,7 @@
 package com.dongnaebook.domain.album;
 
 
+import com.dongnaebook.domain.album.DTO.AlbumDetailDTO;
 import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
 import com.dongnaebook.domain.album.DTO.AlbumResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,10 @@ public class AlbumController {
         return albumService.getAll();
     }
 
-//    @GetMapping("{id}")
-//    public AlbumResponseDTO getById(@PathVariable Long id) {
-//        return albumService.getById(id);
-//    }
+    @GetMapping("{id}")
+    public AlbumDetailDTO getById(@PathVariable Long id) {
+        return albumService.getById(id);
+    }
 
     @PostMapping("")
     public AlbumResponseDTO create(@RequestBody AlbumRequestDTO requestDto) {

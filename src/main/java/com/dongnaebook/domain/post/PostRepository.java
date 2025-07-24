@@ -1,7 +1,6 @@
 package com.dongnaebook.domain.post;
 
 import com.dongnaebook.domain.album_group.AlbumGroup;
-import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
