@@ -132,6 +132,7 @@ public class PostService {
         return posts.stream()
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());
+    }
 
     public List<PostResponseDTO> getPostsByPlaceIdAndMonth(Long placeId, YearMonth targetMonth ) {
         LocalDate start = targetMonth.atDay(1);        // 2025-07-01
