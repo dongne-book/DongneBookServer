@@ -18,4 +18,6 @@ public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
 
     void deleteByUserAndPost(User user, Post Post);
 
+    int countByPost_Id(Long postId);
+
 }

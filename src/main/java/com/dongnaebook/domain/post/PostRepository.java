@@ -1,11 +1,12 @@
 package com.dongnaebook.domain.post;
 
-import com.dongnaebook.domain.album_group.AlbumGroup;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByAlbum_Id(Long albumId);
@@ -18,4 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByAlbum_IdAndCreatedBy(Long albumId, String email);
 
+    @NonNull
+    Page<Post> findAll(@NonNull  Pageable pageable);
 }

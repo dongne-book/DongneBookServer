@@ -10,5 +10,4 @@ public class UserRequestDTO {
     private String email;
     private String nickname;
     private String password;
-    private Integer adminLevel;
 }
