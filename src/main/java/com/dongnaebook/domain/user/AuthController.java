@@ -1,17 +1,11 @@
 package com.dongnaebook.domain.user;
 
-import com.dongnaebook.domain.user.DTO.UserLoginRequestDTO;
-import com.dongnaebook.domain.user.DTO.UserLoginResponseDTO;
-import com.dongnaebook.domain.user.DTO.UserRequestDTO;
-import com.dongnaebook.domain.user.DTO.UserResponseDTO;
+import com.dongnaebook.domain.user.DTO.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,5 +28,11 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         return ResponseEntity.ok("로그아웃 하셨습니다.");
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<UserLoginResponseDTO> refresh(@RequestBody RefreshTokenRequestDTO request) {
+        UserLoginResponseDTO response = authService.refreshToken(request.getRefreshToken());
+        return ResponseEntity.ok(response);
     }
 }
