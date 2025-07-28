@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +35,13 @@ public class PamphletBookmarkService {
     }
     @Transactional
     public Boolean delete(String email, Long pamphletId){
-        if(pamphletBookMarkRepository.existsByUser_EmailAndPamphlet_Id(email, pamphletId)){
-            PamphletBookmark pamphletBookMark = pamphletBookMarkRepository.findByUser_EmailAndPamphlet_Id(email, pamphletId)
-                    .orElseThrow(() -> new NotFoundException("북마크 되지 않은 팜플랫"));
+        Optional<PamphletBookmark> existPamphletBookmark = pamphletBookMarkRepository.findByUser_EmailAndPamphlet_Id(email, pamphletId);
+        if(existPamphletBookmark.isPresent()){
+            PamphletBookmark pamphletBookMark = existPamphletBookmark.get();
             pamphletBookMarkRepository.delete(pamphletBookMark);
             return true;
         }else{
-            return false;
+            throw new NotFoundException("사용자 " + email + "과 팜플릿 ID " + pamphletId + "에 대한 북마크를 찾을 수 없습니다");
         }
     }
 

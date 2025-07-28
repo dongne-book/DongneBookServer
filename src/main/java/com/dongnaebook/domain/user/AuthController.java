@@ -1,9 +1,6 @@
 package com.dongnaebook.domain.user;
 
-import com.dongnaebook.domain.user.DTO.UserLoginRequestDTO;
-import com.dongnaebook.domain.user.DTO.UserLoginResponseDTO;
-import com.dongnaebook.domain.user.DTO.UserRequestDTO;
-import com.dongnaebook.domain.user.DTO.UserResponseDTO;
+import com.dongnaebook.domain.user.DTO.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +16,12 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDTO> signup(@RequestBody UserRequestDTO request) {
         UserResponseDTO userResponseDto = authService.signup(request);
+        return ResponseEntity.ok(userResponseDto);
+    }
+
+    @PostMapping("/signup/admin")
+    public ResponseEntity<UserResponseDTO> signupAdmin(@RequestBody UserRequestDTO request) {
+        UserResponseDTO userResponseDto = authService.signupAdmin(request);
         return ResponseEntity.ok(userResponseDto);
     }
 
@@ -40,5 +43,11 @@ public class AuthController {
     @GetMapping("/nickname")
     public ResponseEntity<Boolean> nickname(@RequestParam String nickname) {
         return ResponseEntity.ok(authService.nicknameCheck(nickname));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<UserLoginResponseDTO> refresh(@RequestBody RefreshTokenRequestDTO request) {
+        UserLoginResponseDTO response = authService.refreshToken(request.getRefreshToken());
+        return ResponseEntity.ok(response);
     }
 }

@@ -9,6 +9,7 @@ import lombok.Setter;
 @Builder
 public class UserLoginResponseDTO {
     private String token;
+    private String refreshToken;
     private String email;
     private String nickname;
 }

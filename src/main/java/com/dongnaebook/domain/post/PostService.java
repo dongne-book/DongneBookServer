@@ -4,10 +4,18 @@ import com.dongnaebook.common.exception.NotFoundException;
 import com.dongnaebook.domain.album.Album;
 import com.dongnaebook.domain.album.AlbumRepository;
 import com.dongnaebook.domain.place.Place;
+import com.dongnaebook.domain.place.PlaceController;
 import com.dongnaebook.domain.place.PlaceRepository;
+import com.dongnaebook.domain.place.PlaceService;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
+import com.dongnaebook.domain.post.DTO.PostResponseDetailDTO;
+import com.dongnaebook.domain.postlike.PostLikeRepository;
+import com.dongnaebook.domain.user.User;
+import com.dongnaebook.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +30,8 @@ public class PostService {
     private final PostRepository postRepository;
     private final PlaceRepository placeRepository;
     private final AlbumRepository albumRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final UserRepository userRepository;
 
     public PostResponseDTO create(PostRequestDTO requestDto) {
         Place place = placeRepository.findById(requestDto.getPlaceId())
@@ -47,6 +57,18 @@ public class PostService {
         return postRepository.findAll().stream()
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    public Page<PostResponseDetailDTO> getAllWithPagination(Pageable pageable) {
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return postPage.map(post -> {
+            int likeCount = postLikeRepository.countByPost_Id(post.getId());
+            User createdBy = userRepository.findByEmail(post.getCreatedBy())
+                    .orElseThrow(() -> new NotFoundException("사용자가 존재하지 않습니다."));
+            User modifiedBy = userRepository.findByEmail(post.getModifiedBy())
+                    .orElseThrow(() -> new NotFoundException("사용자가 존재하지 않습니다."));
+            return PostMapper.toResponseDetailDto(post, createdBy, modifiedBy, likeCount);
+        });
     }
 
     public PostResponseDTO update(Long id, PostRequestDTO updateRequestDto) {
@@ -80,6 +102,33 @@ public class PostService {
 
     public List<PostResponseDTO> getPostsByPlaceId(Long placeId) {
         List<Post> posts = postRepository.findByPlace_Id(placeId);
+        return posts.stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
+    public Post getPostEntityById(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Post not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post> getPostEntitiesByIds(List<Long> ids) {
+        return postRepository.findAllById(ids);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDTO> getPostByIds(List<Long> ids) {
+        return postRepository.findAllById(ids).stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponseDTO> getPostByDate(LocalDate date) {
+        List<Post> posts = postRepository.findByVisitDate(date);
         return posts.stream()
                 .map(PostMapper::toResponseDto)
                 .collect(Collectors.toList());
