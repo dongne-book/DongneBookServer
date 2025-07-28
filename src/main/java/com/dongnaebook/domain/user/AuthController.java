@@ -8,10 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,5 +31,14 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         return ResponseEntity.ok("로그아웃 하셨습니다.");
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<Boolean> email(@RequestParam String email) {
+        return ResponseEntity.ok(authService.emailCheck(email));
+    }
+    @GetMapping("/nickname")
+    public ResponseEntity<Boolean> nickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(authService.nicknameCheck(nickname));
     }
 }
