@@ -36,6 +36,15 @@ public class AuthController {
         return ResponseEntity.ok("로그아웃 하셨습니다.");
     }
 
+    @GetMapping("/email")
+    public ResponseEntity<Boolean> email(@RequestParam String email) {
+        return ResponseEntity.ok(authService.emailCheck(email));
+    }
+    @GetMapping("/nickname")
+    public ResponseEntity<Boolean> nickname(@RequestParam String nickname) {
+        return ResponseEntity.ok(authService.nicknameCheck(nickname));
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<UserLoginResponseDTO> refresh(@RequestBody RefreshTokenRequestDTO request) {
         UserLoginResponseDTO response = authService.refreshToken(request.getRefreshToken());

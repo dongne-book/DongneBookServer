@@ -1,6 +1,5 @@
 package com.dongnaebook.domain.user;
 
-import com.dongnaebook.domain.admin.AdminLevel;
 import com.dongnaebook.domain.user.DTO.UserLoginRequestDTO;
 import com.dongnaebook.domain.user.DTO.UserLoginResponseDTO;
 import com.dongnaebook.domain.user.DTO.UserRequestDTO;
@@ -13,6 +12,7 @@ import com.dongnaebook.common.exception.DuplicateUserException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -110,5 +110,14 @@ public class AuthService {
             roles.add("ROLE_ADMIN");
         }
         return roles;
+    }
+
+    public Boolean emailCheck(String email){
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        return optionalUser.isPresent();
+    }
+    public Boolean nicknameCheck(String nickname){
+        Optional<User> optionalUser = userRepository.findByNickname((nickname));
+        return optionalUser.isPresent();
     }
 }
