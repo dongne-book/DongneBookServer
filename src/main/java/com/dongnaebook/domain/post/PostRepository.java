@@ -24,4 +24,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @NonNull
     Page<Post> findAll(@NonNull  Pageable pageable);
 
+
+    List<Post> findByIdIn(List<Long> ids);
+
 }

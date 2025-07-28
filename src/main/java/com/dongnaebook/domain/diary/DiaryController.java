@@ -3,6 +3,7 @@ package com.dongnaebook.domain.diary;
 import com.dongnaebook.domain.diary.DTO.DiaryRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
+import com.dongnaebook.domain.post.DTO.PostResponseDetailDTO;
 import com.dongnaebook.domain.post.Post;
 import com.dongnaebook.domain.post.PostMapper;
 import com.dongnaebook.domain.post.PostRepository;
@@ -11,6 +12,10 @@ import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.diary.DTO.DiaryResponseDTO;
 import com.dongnaebook.domain.diary.DTO.DiaryDetailDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,6 +33,21 @@ public class DiaryController {
     @GetMapping("")
     public List<DiaryResponseDTO> getAll() {
         return diaryService.getAll();
+    }
+
+    @GetMapping("/paginated")
+    public Page<DiaryDetailDTO> getAllDetailedPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+
+        Sort sort = sortDir.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return diaryService.getAllWithPagination(pageable);
     }
 
     @GetMapping("/{id}")
