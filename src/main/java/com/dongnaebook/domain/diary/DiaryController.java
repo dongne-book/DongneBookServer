@@ -50,6 +50,16 @@ public class DiaryController {
         return diaryService.getAllWithPagination(pageable);
     }
 
+    @GetMapping("/search")
+    public Page<DiaryDetailDTO> searchDiaries(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return diaryService.searchByTitleAndContent(keyword, pageable);
+    }
+
+
     @GetMapping("/{id}")
     public DiaryDetailDTO getById(@PathVariable Long id) {
         return diaryService.getById(id);

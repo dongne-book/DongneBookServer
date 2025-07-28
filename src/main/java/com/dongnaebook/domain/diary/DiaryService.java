@@ -6,10 +6,8 @@ import com.dongnaebook.domain.diary.DTO.DiaryResponseDTO;
 import com.dongnaebook.domain.diary_post.DiaryPostRepository;
 import com.dongnaebook.domain.diary_region.DiaryRegion;
 import com.dongnaebook.domain.diary_region.DiaryRegionRepository;
-import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import com.dongnaebook.domain.post.Post;
 import com.dongnaebook.domain.post.PostRepository;
-import com.dongnaebook.domain.post.PostService;
 import com.dongnaebook.domain.diary.DTO.DiaryDetailDTO;
 import com.dongnaebook.domain.diary_post.DiaryPost;
 import com.dongnaebook.domain.region.Region;
@@ -113,5 +111,9 @@ public class DiaryService {
         return DiaryMapper.toDetailResponse(diary, createdBy, modifiedBy, regions, posts);
     }
 
+    public Page<DiaryDetailDTO> searchByTitleAndContent(String keyword, Pageable pageable) {
+        Page<Diary> diaryPage = diaryRepository.findByTitleOrContentContaining(keyword, keyword, pageable);
+        return diaryPage.map(this::buildDiaryDetailDTO);
+    }
 
 }
