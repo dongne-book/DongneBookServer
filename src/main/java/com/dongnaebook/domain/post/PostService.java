@@ -41,6 +41,8 @@ public class PostService {
 
         Post post = PostMapper.toEntity(requestDto, place, album);
 
+        post.getImages().forEach(image -> image.setPost(post));
+
         Post savedPost = postRepository.save(post);
 
         return PostMapper.toResponseDto(savedPost);
