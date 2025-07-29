@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,7 +22,7 @@ public class PostResponseDetailDTO {
     private Long id;
     private String content;
     private LocalDate visitDate;
-    private String imageUrl;
+    private List<String> images;
     private Boolean isPublic;
     private PlaceResponseDTO place;
 

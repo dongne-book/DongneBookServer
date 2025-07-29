@@ -5,14 +5,18 @@ import com.dongnaebook.domain.album.Album;
 import com.dongnaebook.domain.album.DTO.AlbumRequestDTO;
 import com.dongnaebook.domain.place.Place;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
+import com.dongnaebook.domain.post_image.PostImage;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="posts")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -26,8 +30,6 @@ public class Post extends BaseEntity {
 
     private LocalDate visitDate;
 
-    private String imageUrl;
-
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isPublic;
 
@@ -39,10 +41,12 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "place_id")
     private Place place;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostImage> images = new ArrayList<>();
+
     public void update(PostRequestDTO updateDTO) {
         this.content = updateDTO.getContent();
         this.visitDate = updateDTO.getVisitDate();
-        this.imageUrl = updateDTO.getImageUrl();
         this.isPublic = updateDTO.getIsPublic() != null ? updateDTO.getIsPublic() : true;
     }
 

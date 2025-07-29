@@ -6,8 +6,11 @@ import com.dongnaebook.domain.place.PlaceMapper;
 import com.dongnaebook.domain.post.DTO.PostRequestDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import com.dongnaebook.domain.post.DTO.PostResponseDetailDTO;
+import com.dongnaebook.domain.post_image.PostImage;
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserMapper;
+
+import java.util.stream.Collectors;
 
 public class PostMapper {
    public static PostResponseDTO toResponseDto(Post post) {
@@ -15,7 +18,9 @@ public class PostMapper {
                .id(post.getId())
                .content(post.getContent())
                .visitDate(post.getVisitDate())
-               .imageUrl(post.getImageUrl())
+               .images(post.getImages().stream()
+                       .map(PostImage::getImageUrl)
+                       .collect(Collectors.toList()))
                .isPublic(post.getIsPublic())
                .place(PlaceMapper.toResponseDTO(post.getPlace()))
                .createdAt(post.getCreatedAt())
@@ -30,7 +35,9 @@ public class PostMapper {
                 .id(post.getId())
                 .content(post.getContent())
                 .visitDate(post.getVisitDate())
-                .imageUrl(post.getImageUrl())
+                .images(post.getImages().stream()
+                        .map(PostImage::getImageUrl)
+                        .collect(Collectors.toList()))
                 .isPublic(post.getIsPublic())
                 .place(PlaceMapper.toResponseDTO(post.getPlace()))
                 .createdAt(post.getCreatedAt())
@@ -45,7 +52,11 @@ public class PostMapper {
          return Post.builder()
                  .content(postRequestDTO.getContent())
                  .visitDate(postRequestDTO.getVisitDate())
-                 .imageUrl(postRequestDTO.getImageUrl())
+                 .images(postRequestDTO.getImages().stream()
+                         .map(imageUrl -> PostImage.builder()
+                                 .imageUrl(imageUrl)
+                                 .build())
+                         .collect(Collectors.toList()))
                  .isPublic(postRequestDTO.getIsPublic())
                  .place(place)
                  .album(album)
