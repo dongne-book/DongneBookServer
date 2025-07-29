@@ -13,6 +13,7 @@ import com.dongnaebook.domain.diary_post.DiaryPost;
 import com.dongnaebook.domain.region.Region;
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserRepository;
+import com.dongnaebook.domain.user.vo.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -100,9 +101,9 @@ public class DiaryService {
                 .collect(Collectors.toList());
 
         List<Post> posts = postRepository.findByIdIn(postIds);
-        User createdBy = userRepository.findByEmail(diary.getCreatedBy())
+        User createdBy = userRepository.findByEmail(new Email(diary.getCreatedBy()))
                 .orElseThrow(() -> new NotFoundException("Created user not found"));
-        User modifiedBy = userRepository.findByEmail(diary.getModifiedBy())
+        User modifiedBy = userRepository.findByEmail(new Email(diary.getModifiedBy()))
                 .orElseThrow(() -> new NotFoundException("Modified user not found"));
         List<Region> regions = diaryRegionRepository.findByDiaryId(diary.getId()).stream()
                 .map(DiaryRegion::getRegion)

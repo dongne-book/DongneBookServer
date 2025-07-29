@@ -11,6 +11,7 @@ import com.dongnaebook.domain.pamphlets.DTO.PamphletResponseDTO;
 import com.dongnaebook.domain.pamphlets.PamphletMapper;
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserRepository;
+import com.dongnaebook.domain.user.vo.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class AlbumGroupService {
 
     public AlbumGroupResponseDTO createByAlbumId(Long albumId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(new Email(email))
                 .orElseThrow(() -> new NotFoundException("User not found"));
         Album album = albumRepository.findById(albumId)
                 .orElseThrow(() -> new NotFoundException("Album not found"));

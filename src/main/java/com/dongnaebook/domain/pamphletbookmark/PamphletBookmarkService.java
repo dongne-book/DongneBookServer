@@ -5,6 +5,7 @@ import com.dongnaebook.domain.pamphlets.DTO.PamphletResponseDTO;
 import com.dongnaebook.domain.pamphlets.PamphletMapper;
 import com.dongnaebook.domain.pamphlets.PamphletRepository;
 import com.dongnaebook.domain.user.UserRepository;
+import com.dongnaebook.domain.user.vo.Email;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class PamphletBookmarkService {
         }
         PamphletBookmark pamphletBookMark =
                 PamphletBookmark.builder()
-                        .user(userRepository.findByEmail(email).orElseThrow(EntityNotFoundException::new))
+                        .user(userRepository.findByEmail(new Email(email)).orElseThrow(EntityNotFoundException::new))
                         .pamphlet(pamphletRepository.findById(pamphletId).orElseThrow(EntityNotFoundException::new))
                         .build();
         pamphletBookMarkRepository.save(pamphletBookMark);

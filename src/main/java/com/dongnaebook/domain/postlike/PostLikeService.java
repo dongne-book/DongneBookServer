@@ -5,6 +5,7 @@ import com.dongnaebook.domain.post.DTO.PostResponseDTO;
 import com.dongnaebook.domain.post.PostMapper;
 import com.dongnaebook.domain.post.PostRepository;
 import com.dongnaebook.domain.user.UserRepository;
+import com.dongnaebook.domain.user.vo.Email;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class PostLikeService {
         }
         PostLike postLike =
                 PostLike.builder()
-                        .user(userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다")))
+                        .user(userRepository.findByEmail(new Email(email)).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다")))
                         .post(postRepository.findById(postId).orElseThrow(() -> new NotFoundException("게시글을 찾을 수 없습니다")))
                         .build();
         postLikeRepository.save(postLike);

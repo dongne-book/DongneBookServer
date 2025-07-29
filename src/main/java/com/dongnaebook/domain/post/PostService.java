@@ -13,6 +13,7 @@ import com.dongnaebook.domain.post.DTO.PostResponseDetailDTO;
 import com.dongnaebook.domain.postlike.PostLikeRepository;
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserRepository;
+import com.dongnaebook.domain.user.vo.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,9 +66,9 @@ public class PostService {
         Page<Post> postPage = postRepository.findAll(pageable);
         return postPage.map(post -> {
             int likeCount = postLikeRepository.countByPost_Id(post.getId());
-            User createdBy = userRepository.findByEmail(post.getCreatedBy())
+            User createdBy = userRepository.findByEmail(new Email(post.getCreatedBy()))
                     .orElseThrow(() -> new NotFoundException("사용자가 존재하지 않습니다."));
-            User modifiedBy = userRepository.findByEmail(post.getModifiedBy())
+            User modifiedBy = userRepository.findByEmail(new Email(post.getModifiedBy()))
                     .orElseThrow(() -> new NotFoundException("사용자가 존재하지 않습니다."));
             return PostMapper.toResponseDetailDto(post, createdBy, modifiedBy, likeCount);
         });
