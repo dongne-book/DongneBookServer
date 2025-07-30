@@ -2,6 +2,8 @@ package com.dongnaebook.domain.social;
 
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserRepository;
+import com.dongnaebook.domain.user.vo.Email;
+import com.dongnaebook.domain.user.vo.Nickname;
 import com.dongnaebook.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,19 +67,20 @@ public class KakaoAuthService {
         if(kakaoUserInfo.getEmail() == null){
             throw new RuntimeException("카카오 계정 이메일이 없습니다.");
         }
-        User user = userRepository.findByEmail(kakaoUserInfo.getEmail())
+        User user = userRepository.findByEmail(new Email(kakaoUserInfo.getEmail()))
                 .orElseGet(() -> {
                     return userRepository.save(
                             User.builder()
-                                    .email(kakaoUserInfo.getEmail())
-                                    .nickname(kakaoUserInfo.getNickname() != null ? kakaoUserInfo.getNickname() : kakaoUserInfo.getEmail())
+                                    .email(new Email(kakaoUserInfo.getEmail()))
+                                    .nickname(kakaoUserInfo.getNickname() != null ? new Nickname(kakaoUserInfo.getNickname()) : new Nickname(kakaoUserInfo.getEmail()))
                                     .kakaoId(kakaoUserInfo.getKakaoId())
+                                    .adminLevel(1)
                                     .password(null)
                                     .build()
                     );
                 });
         List<String> roles = List.of("ROLE_USER");
-        String jwt = jwtTokenProvider.generateToken(user.getEmail(), roles);
+        String jwt = jwtTokenProvider.generateToken(user.getEmail().toString(), roles);
         return Map.of(
                 "token", jwt,
                 "user", Map.of(

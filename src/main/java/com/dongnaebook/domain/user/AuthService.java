@@ -4,6 +4,8 @@ import com.dongnaebook.domain.user.DTO.UserLoginRequestDTO;
 import com.dongnaebook.domain.user.DTO.UserLoginResponseDTO;
 import com.dongnaebook.domain.user.DTO.UserRequestDTO;
 import com.dongnaebook.domain.user.DTO.UserResponseDTO;
+import com.dongnaebook.domain.user.vo.Email;
+import com.dongnaebook.domain.user.vo.Nickname;
 import com.dongnaebook.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,58 +24,61 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
 
     public UserResponseDTO signup(UserRequestDTO userRequestDto){
-        if(userRepository.existsByEmail(userRequestDto.getEmail())) {
+        if(userRepository.existsByEmail(new Email(userRequestDto.getEmail()))) {
             throw new DuplicateUserException("이미 존재하는 이메일입니다.");
         }
-        User user = User.builder()
-                .email(userRequestDto.getEmail())
-                .nickname(userRequestDto.getNickname())
-                .password(passwordEncoder.encode(userRequestDto.getPassword()))
-                .adminLevel(1)
-                .build();
+//        User user = User.builder()
+//                .email(userRequestDto.getEmail())
+//                .nickname(userRequestDto.getNickname())
+//                .password(passwordEncoder.encode(userRequestDto.getPassword()))
+//                .adminLevel(1)
+//                .build();
+        User user = UserMapper.toEntity(userRequestDto, passwordEncoder.encode(userRequestDto.getPassword()));
         User saved = userRepository.save(user);
-        return UserResponseDTO.builder()
-                .id(saved.getId())
-                .email(saved.getEmail())
-                .nickname(saved.getNickname())
-                .build();
+//        return UserResponseDTO.builder()
+//                .id(saved.getId())
+//                .email(saved.getEmail())
+//                .nickname(saved.getNickname())
+//                .build();
+        return UserMapper.toResponseDto(saved);
     }
 
     public UserResponseDTO signupAdmin(UserRequestDTO userRequestDto){
-        if(userRepository.existsByEmail(userRequestDto.getEmail())) {
+        if(userRepository.existsByEmail(new Email(userRequestDto.getEmail()))) {
             throw new DuplicateUserException("이미 존재하는 이메일입니다.");
         }
-        User user = User.builder()
-                .email(userRequestDto.getEmail())
-                .nickname(userRequestDto.getNickname())
-                .password(passwordEncoder.encode(userRequestDto.getPassword()))
-                .adminLevel(2)
-                .build();
+//        User user = User.builder()
+//                .email(userRequestDto.getEmail())
+//                .nickname(userRequestDto.getNickname())
+//                .password(passwordEncoder.encode(userRequestDto.getPassword()))
+//                .adminLevel(2)
+//                .build();
+        User user = UserMapper.toEntityByAdmin(userRequestDto, passwordEncoder.encode(userRequestDto.getPassword()));
+
         User saved = userRepository.save(user);
-        return UserResponseDTO.builder()
-                .id(saved.getId())
-                .email(saved.getEmail())
-                .nickname(saved.getNickname())
-                .build();
+        return UserMapper.toResponseDto(saved);
     }
 
     public UserLoginResponseDTO login(UserLoginRequestDTO userLoginRequestDto){
-        User user = userRepository.findByEmail(userLoginRequestDto.getEmail())
+        User user = userRepository.findByEmail(new Email(userLoginRequestDto.getEmail()))
                 .orElse(null);
 
-        if(user == null || !passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword())) {
+//        if(user == null || !passwordEncoder.matches(userLoginRequestDto.getPassword(), user.getPassword().toString())) {
+//            throw new RuntimeException("이메일 또는 비밀번호가 올바르지 않습니다.");
+//        }
+        if(user == null || !user.getPassword().matches(userLoginRequestDto.getPassword(), passwordEncoder)) {
             throw new RuntimeException("이메일 또는 비밀번호가 올바르지 않습니다.");
         }
 
         List<String> roles = getUserRoles(user);
 
-        String token = jwtTokenProvider.generateToken(user.getEmail(), roles);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
+        String token = jwtTokenProvider.generateToken(user.getEmail().toString(), roles);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail().toString());
         return UserLoginResponseDTO.builder()
                 .token(token)
                 .refreshToken(refreshToken)
-                .email(user.getEmail())
-                .nickname(user.getNickname())
+                .email(user.getEmail().toString())
+                .nickname(user.getNickname().toString())
                 .build();
     }
 
@@ -88,18 +93,18 @@ public class AuthService {
 
         String email = jwtTokenProvider.getEmailFromToken(refreshToken);
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(new Email(email))
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
 
         List<String> roles = getUserRoles(user);
-        String newAccessToken = jwtTokenProvider.generateAccessToken(user.getEmail(), roles);
-        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
+        String newAccessToken = jwtTokenProvider.generateAccessToken(user.getEmail().toString(), roles);
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail().toString());
 
         return UserLoginResponseDTO.builder()
                 .token(newAccessToken)
                 .refreshToken(newRefreshToken)
-                .email(user.getEmail())
-                .nickname(user.getNickname())
+                .email(user.getEmail().toString())
+                .nickname(user.getNickname().toString())
                 .build();
     }
 
@@ -113,11 +118,11 @@ public class AuthService {
     }
 
     public Boolean emailCheck(String email){
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        Optional<User> optionalUser = userRepository.findByEmail(new Email(email));
         return optionalUser.isPresent();
     }
     public Boolean nicknameCheck(String nickname){
-        Optional<User> optionalUser = userRepository.findByNickname((nickname));
+        Optional<User> optionalUser = userRepository.findByNickname(new Nickname(nickname));
         return optionalUser.isPresent();
     }
 }

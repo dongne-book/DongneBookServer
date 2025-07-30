@@ -2,6 +2,9 @@ package com.dongnaebook.init;
 
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserRepository;
+import com.dongnaebook.domain.user.vo.Email;
+import com.dongnaebook.domain.user.vo.Nickname;
+import com.dongnaebook.domain.user.vo.Password;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -25,44 +28,44 @@ public class UserInitializer implements ApplicationRunner {
 
         // 일반 사용자들
         User user1 = User.builder()
-                .email("jyp@example.com")
-                .nickname("지영이")
-                .password(passwordEncoder.encode("pwd"))
+                .email(new Email("jyp@example.com"))
+                .nickname(new Nickname("지영이"))
+                .password(new Password(passwordEncoder.encode("pwd")))
                 .adminLevel(1)
                 .build();
 
         User user2 = User.builder()
-                .email("hsk@example.com")
-                .nickname("효식이")
-                .password(passwordEncoder.encode("pwd"))
+                .email(new Email("hsk@example.com"))
+                .nickname(new Nickname("효식이"))
+                .password(new Password(passwordEncoder.encode("pwd")))
                 .adminLevel(1)
                 .build();
 
         User user3 = User.builder()
-                .email("syl@example.com")
-                .nickname("서연이")
-                .password(passwordEncoder.encode("pwd"))
+                .email(new Email("syl@example.com"))
+                .nickname(new Nickname("서연이"))
+                .password(new Password(passwordEncoder.encode("pwd")))
                 .adminLevel(1)
                 .build();
 
         User user4 = User.builder()
-                .email("sjj@example.com")
-                .nickname("상진이")
-                .password(passwordEncoder.encode("pwd"))
+                .email(new Email("sjj@example.com"))
+                .nickname(new Nickname("상진이"))
+                .password(new Password(passwordEncoder.encode("pwd")))
                 .adminLevel(1)
                 .build();
 
         User user5 = User.builder()
-                .email("jhk@example.com")
-                .nickname("지현이")
-                .password(passwordEncoder.encode("pwd"))
+                .email(new Email("jhk@example.com"))
+                .nickname(new Nickname("지현이"))
+                .password(new Password(passwordEncoder.encode("pwd")))
                 .adminLevel(1)
                 .build();
 
         User admin = User.builder()
-                .email("admin@admin.com")
-                .nickname("관리자")
-                .password(passwordEncoder.encode("pwd"))
+                .email(new Email("admin@admin.com"))
+                .nickname(new Nickname("관리자"))
+                .password(new Password(passwordEncoder.encode("pwd")))
                 .adminLevel(2)
                 .build();
 

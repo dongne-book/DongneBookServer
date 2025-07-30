@@ -2,6 +2,8 @@ package com.dongnaebook.domain.social;
 
 import com.dongnaebook.domain.user.User;
 import com.dongnaebook.domain.user.UserRepository;
+import com.dongnaebook.domain.user.vo.Email;
+import com.dongnaebook.domain.user.vo.Nickname;
 import com.dongnaebook.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -63,19 +65,20 @@ public class GoogleAuthService {
         if(googleUserInfo.getEmail() == null){
             throw new RuntimeException("구글 계정 이메일이 없습니다.");
         }
-        User user = userRepository.findByEmail(googleUserInfo.getEmail())
+        User user = userRepository.findByEmail(new Email(googleUserInfo.getEmail()))
                 .orElseGet(() -> {
                     return userRepository.save(
                             User.builder()
-                                    .email(googleUserInfo.getEmail())
-                                    .nickname(googleUserInfo.getNickname() != null ? googleUserInfo.getNickname() : googleUserInfo.getEmail())
+                                    .email(new Email(googleUserInfo.getEmail()))
+                                    .nickname(googleUserInfo.getNickname() != null ? new Nickname(googleUserInfo.getNickname()) : new Nickname(googleUserInfo.getEmail()))
                                     .googleId(googleUserInfo.getGoogleId())
+                                    .adminLevel(1)
                                     .password(null)
                                     .build()
                     );
                 });
         List<String> roles = List.of("ROLE_USER");
-        String jwt = jwtTokenProvider.generateToken(user.getEmail(), roles);
+        String jwt = jwtTokenProvider.generateToken(user.getEmail().toString(), roles);
         return Map.of(
                 "token", jwt,
                 "user", Map.of(

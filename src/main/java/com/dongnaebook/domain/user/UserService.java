@@ -4,6 +4,7 @@ import com.dongnaebook.common.exception.NotFoundException;
 import com.dongnaebook.domain.user.DTO.PasswordDTO;
 import com.dongnaebook.domain.user.DTO.UserRequestDTO;
 import com.dongnaebook.domain.user.DTO.UserResponseDTO;
+import com.dongnaebook.domain.user.vo.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO getByEmail(String email) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(new Email(email))
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
         return UserMapper.toResponseDto(userRepository.save(user));
@@ -43,7 +44,7 @@ public class UserService {
 
     @Transactional
     public UserResponseDTO setUser(String email, UserRequestDTO userRequestDTO) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(new Email(email))
                 .orElseThrow(() -> new NotFoundException("User not found"));
         user.setProfile(userRequestDTO);
         userRepository.save(user);
@@ -52,11 +53,11 @@ public class UserService {
 
     @Transactional
     public Boolean setPassword(String email, PasswordDTO passWordDTO) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(new Email(email))
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        if(passwordEncoder.matches(passWordDTO.getPassword(), user.getPassword())) {
-            user.setPassword(passwordEncoder.encode(passWordDTO.getConfirmPassword()));
+        if(user.getPassword().matches(passWordDTO.getPassword(), passwordEncoder)) {
+            user.passwordChange(passwordEncoder.encode(passWordDTO.getConfirmPassword()));
             userRepository.save(user);
             return true;
         }else{

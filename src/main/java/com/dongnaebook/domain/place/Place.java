@@ -1,5 +1,4 @@
 package com.dongnaebook.domain.place;
-import com.dongnaebook.domain.album.Album;
 import com.dongnaebook.domain.region.Region;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
