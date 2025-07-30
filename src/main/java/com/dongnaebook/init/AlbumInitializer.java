@@ -88,7 +88,7 @@ public class AlbumInitializer implements ApplicationRunner {
     }
 
     private void createAlbum(User user, String name, LocalDate startDate, LocalDate endDate) {
-        setSecurityContext(user.getEmail());
+        setSecurityContext(user.getEmail().toString());
 
         Album album = Album.builder()
                 .name(name)

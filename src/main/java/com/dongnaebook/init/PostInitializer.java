@@ -147,7 +147,7 @@ public class PostInitializer implements ApplicationRunner {
 
     private void createPost(User user, Album album, Place place, String title,
                             String content, LocalDate visitDate, Boolean isPublic) {
-        setSecurityContext(user.getEmail());
+        setSecurityContext(user.getEmail().toString());
 
         Post post = Post.builder()
                 .content(content)
